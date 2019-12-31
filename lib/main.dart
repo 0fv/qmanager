@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qmanager/pages/homepage.dart';
+import 'package:qmanager/router/router.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +13,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: HomePage(),
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/questionnaireEdit',
+      onGenerateRoute: renderPage
     );
   }
 }

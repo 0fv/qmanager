@@ -11,7 +11,7 @@ class Questionnaireapi {
   }
 
   Future<dynamic> getQuestionnariePage(
-      {int page = 1, int pageSize = 10, int isEdit = -1}) async {
+      {int page, int pageSize, int isEdit = -1}) async {
     Map<String,dynamic> param = {"page": page, "pageSize": pageSize, "isEdit": isEdit};
     return _getData("/questionnaire", param);
   }

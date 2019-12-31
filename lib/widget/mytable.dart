@@ -1,15 +1,15 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:qmanager/modules/jsonserializable.dart';
+import 'package:qmanager/common/common.dart';
 
 class MyTable extends DataTableSource {
   List<dynamic> data;
-  JsonSerializable obj;
   bool _isRowCountApproximate = false;
   HashSet<int> _selectedSet = HashSet();
-  MyTable(this.data, this.obj);
-
+  VoidCallback listener;
+  GetDataCells getDataCells;
+  MyTable(this.data, this.getDataCells);
   @override
   DataRow getRow(int index) {
     assert(index >= 0);
@@ -26,11 +26,7 @@ class MyTable extends DataTableSource {
           }
           notifyListeners();
         },
-        cells: obj
-            .toJson()
-            .keys
-            .map((value) => DataCell(Text(d[value] == null ? "-" : d[value])))
-            .toList());
+        cells: getDataCells(d));
   }
 
   @override
@@ -51,6 +47,14 @@ class MyTable extends DataTableSource {
       this._selectedSet.clear();
     }
     notifyListeners();
+  }
+
+  List<dynamic> getChecked() {
+    List<dynamic> checked = [];
+    for (var index in this._selectedSet) {
+      checked.add(this.data[index]);
+    }
+    return checked;
   }
 
   void sort(int index, bool b, toMap(var m)) {
