@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qmanager/modules/answercellmodule.dart';
 
 const String server = "http://127.0.0.1:8000";
 const Map<String, String> qname = {
@@ -15,3 +16,4 @@ typedef List<Widget> GetTopButton(
 typedef void OpTable(List<dynamic> selectedRow);
 typedef List<DataCell> GetDataCells(var row);
 typedef void SetValue(String str);
+typedef void SetAnswerCell(AnswerCell answerCell);

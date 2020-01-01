@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:qmanager/common/common.dart';
+import 'package:qmanager/modules/answercellmodule.dart';
 import 'package:qmanager/modules/questioncellmodule.dart';
 import 'package:qmanager/modules/questiongroupmodule.dart';
 import 'package:qmanager/widget/diolog/groupeditdiolog.dart';
+import 'package:qmanager/widget/diolog/questioncelldiolog.dart';
 
 class QuestionnaireEdit extends StatefulWidget {
   final arguments;
@@ -104,7 +106,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
           onChanged: setValue),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+          borderRadius: BorderRadius.all(Radius.circular(1)),
           border: Border.all(color: Colors.black12, width: 2)),
     );
   }
@@ -221,7 +223,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                       color: Colors.red,
                     ),
                     onPressed: () async {
-                      bool b = await questionGroupDeleteDialog(context);
+                      bool b = await confirmDialog(context, "删除", "确认删除？");
                       if (b == true) {
                         setState(() {
                           this._questionGroupList.removeAt(key);
@@ -231,7 +233,14 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                   )
                 ]),
               ),
-              children: <Widget>[Text("sfsf")],
+              children: <Widget>[
+                FlatButton(
+                  child: Text("添加问题"),
+                  onPressed: () async {
+                    QuestionCell answerCell = await answerCellDialog(context);
+                  },
+                )
+              ],
             ),
           );
         });

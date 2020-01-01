@@ -12,12 +12,12 @@ Future<String> questionGroupEditDialog(BuildContext context, String gname) {
         actions: <Widget>[
           FlatButton(
             child: Text("取消"),
-            onPressed: () => Navigator.of(context).pop(), // 关闭对话框
+            onPressed: () => Navigator.of(context).pop(), 
           ),
           FlatButton(
             child: Text("确定"),
             onPressed: () {
-              //关闭对话框并返回true
+           
               Navigator.of(context).pop(tec.text);
             },
           ),
@@ -27,23 +27,22 @@ Future<String> questionGroupEditDialog(BuildContext context, String gname) {
   );
 }
 
-Future<bool> questionGroupDeleteDialog(BuildContext context) {
+Future<bool> confirmDialog(BuildContext context,String title,String content) {
  
   return showDialog<bool>(
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text("修改"),
-        content: Text("确定删除？"),
+        title: Text(title),
+        content: Text(content),
         actions: <Widget>[
           FlatButton(
             child: Text("取消"),
-            onPressed: () => Navigator.of(context).pop(), // 关闭对话框
+            onPressed: () => Navigator.of(context).pop(), 
           ),
           FlatButton(
             child: Text("确定"),
             onPressed: () {
-              //关闭对话框并返回true
               Navigator.of(context).pop(true);
             },
           ),
@@ -68,7 +67,7 @@ Widget input(String name, TextEditingController tec,
     ),
     decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderRadius: BorderRadius.all(Radius.circular(1)),
         border: Border.all(color: Colors.black12, width: 2)),
   );
 }

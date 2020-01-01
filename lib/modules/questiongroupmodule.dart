@@ -7,7 +7,7 @@ class QuestionGroup {
 
   QuestionGroup.fromJson(Map<String, dynamic> json)
       : title = json["title"],
-        questionCells = json["question_cells"] == null
+        questionCells = json["question_cells"] != null
             ? List<QuestionCell>.from(json["question_cells"])
             : null;
 
