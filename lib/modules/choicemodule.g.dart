@@ -9,11 +9,12 @@ part of 'choicemodule.dart';
 Choice _$ChoiceFromJson(Map<String, dynamic> json) {
   return Choice(
     choice: Map<String, bool>.from(json['choice'] as Map),
-    isMulti: json['isMulti'] as bool,
-  );
+    isMulti: json['is_multi'] as bool,
+  )..type = json['type'] as String;
 }
 
 Map<String, dynamic> _$ChoiceToJson(Choice instance) => <String, dynamic>{
+      'type': instance.type,
       'choice': instance.choice,
-      'isMulti': instance.isMulti,
+      'is_multi': instance.isMulti,
     };
