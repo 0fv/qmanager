@@ -1,4 +1,4 @@
-abstract class JsonSerializable {
-  Map<String, String> toJson();
+abstract class JsonS {
+  Map<String, dynamic> toJson();
   Map<String, dynamic> toMap();
 }

@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/questionnaireEdit',
+      initialRoute: '/',
       onGenerateRoute: renderPage
     );
   }

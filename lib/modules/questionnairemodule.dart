@@ -1,6 +1,6 @@
 import 'package:qmanager/modules/jsonserializable.dart';
 
-class Questionnaire implements JsonSerializable {
+class Questionnaire implements JsonS {
   final String id;
   final String name;
   final String introduce;

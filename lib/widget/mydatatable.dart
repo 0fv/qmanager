@@ -11,7 +11,7 @@ class MyDataTable extends StatefulWidget {
   final List<String> titleList;
   final GetListData getListData;
   final GetOperationCell getOperationCell;
-  final JsonSerializable obj;
+  final JsonS obj;
   final String titleName;
   final GetTopButton getTopButton;
   MyDataTable(this.getListData, this.getOperationCell, this.titleList, this.obj,
@@ -69,13 +69,14 @@ class _MyDataTableState extends State<MyDataTable> {
     }
   }
     List<DataCell> _getCells(var row) {
+      print(row);
     List<DataCell> cells = widget.obj
         .toJson()
         .keys
         .map((value) => DataCell(Container(
               width: 200,
               child: Text(
-                row[value] == null ? "-" : row[value],
+                row[value] == null ? "-" : row[value].toString(),
               ),
             )))
         .toList();

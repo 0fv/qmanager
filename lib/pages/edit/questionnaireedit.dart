@@ -166,7 +166,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
   }
 
   Widget groupAddWidget() {
-    return Row(
+    return Wrap(
       children: <Widget>[
         FlatButton(
           child: Text("添加空白问题组"),

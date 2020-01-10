@@ -14,7 +14,7 @@ Future<QuestionCell> answerCellDialog(BuildContext context) {
         content: TypeChoicer(
           onChanged: (value) {
             _questionCell = value;
-            print(_questionCell.title);
+            print(_questionCell.toJson());
           },
         ),
         actions: <Widget>[
@@ -100,8 +100,10 @@ class _TypeChoicerState extends State<TypeChoicer> {
       children: <Widget>[
         input("问题描述", (str) {
           this._questionCell.title = str;
+          this._questionCell.answerCells = this._answerCellList[_index];
           widget.onChanged(this._questionCell);
-        }, _tec)
+        }, _tec),
+        _choice()
       ],
     );
   }
@@ -110,7 +112,6 @@ class _TypeChoicerState extends State<TypeChoicer> {
     return Column(
       children: <Widget>[
         FlatButton(child: Text("添加选项"),onPressed: (){
-          
         },)
       ],
     );
@@ -140,7 +141,7 @@ Widget input(
   );
 
   focusNode.addListener(() {
-    if (!focusNode.hasFocus) {
+    if (!focusNode.hasPrimaryFocus) {
       onChange(tec.text);
     }
   });
