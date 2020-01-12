@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 
 Widget loadingWidget(BuildContext context) {
   return Builder(
@@ -12,4 +13,9 @@ Widget loadingWidget(BuildContext context) {
       ],
     ),
   );
+}
+
+Toast popToast(String msg, BuildContext context) {
+  Toast.show("$msg", context,
+      duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
 }

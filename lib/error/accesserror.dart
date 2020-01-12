@@ -1,0 +1,3 @@
+class AccessError extends Error{
+  
+}

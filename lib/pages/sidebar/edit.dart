@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qmanager/api/questionnaireapi.dart';
 import 'package:qmanager/modules/questionnairemodule.dart';
-import 'package:qmanager/widget/mydatatable.dart';
+import 'package:qmanager/widget/table/mydatatable.dart';
 import 'package:qmanager/widget/topbar/opbutton.dart';
 
 class Edit extends StatelessWidget {
@@ -31,7 +31,7 @@ class Edit extends StatelessWidget {
     ));
   }
 
-  List<Widget> _getTopBar(List<dynamic> selectedRow, BuildContext context) {
+  List<Widget> _getTopBar(List<dynamic> selectedRow, BuildContext context,VoidCallback refresh) {
     return <Widget>[
       opButton(
           context,
@@ -46,6 +46,10 @@ class Edit extends StatelessWidget {
                   print(selectedRow);
                 })
     ];
+  }
+
+    Map<String,dynamic> _getMap(var m){
+    return Questionnaire.fromJson(m).toMap();
   }
 
   @override
@@ -63,6 +67,7 @@ class Edit extends StatelessWidget {
           modifyTime: DateTime.now()),
       "编辑中",
       _getTopBar,
+      _getMap
     ));
   }
 }

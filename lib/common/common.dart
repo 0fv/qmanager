@@ -12,8 +12,11 @@ const Map<String, String> qname = {
 typedef DataCell GetOperationCell(BuildContext context, var row);
 typedef Future<dynamic> GetListData();
 typedef List<Widget> GetTopButton(
-    List<dynamic> seletedRow, BuildContext context);
+    List<dynamic> seletedRow, BuildContext context,VoidCallback refresh);
 typedef void OpTable(List<dynamic> selectedRow);
 typedef List<DataCell> GetDataCells(var row);
 typedef void SetValue(String str);
 typedef void SetAnswerCell(AnswerCell answerCell);
+typedef DataCell GetDataCell(int index,var value);
+typedef Text SetText(var value);
+typedef Map<String,dynamic> GetType(var m);

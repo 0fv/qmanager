@@ -65,11 +65,22 @@ class MyTable extends DataTableSource {
       final Comparable s1Value = m1[key];
       final Comparable s2Value = m2[key];
       if (!b) {
-        return s1Value.compareTo(s2Value);
+        return _compareIncludeNull(s1Value, s2Value);
       } else {
-        return s2Value.compareTo(s1Value);
+        return _compareIncludeNull(s2Value, s1Value);
       }
     });
     notifyListeners();
+  }
+  int _compareIncludeNull(Comparable s1Value,Comparable s2Value){
+            if (s1Value == null && s2Value != null) {
+          return 1;
+        } else if (s2Value == null && s1Value != null) {
+          return -1;
+        } else if (s2Value == null && s1Value == null) {
+          return 0;
+        } else {
+          return s1Value.compareTo(s2Value);
+        }
   }
 }

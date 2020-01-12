@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.assignment_turned_in),
-                    title: Text("已完成"),
+                    title: Text("已完成模板"),
                     selected: 1 == _index,
                     onTap: () {
                       setState(() {
@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.beenhere),
-                    title: Text("已完成"),
+                    title: Text("调查已完成"),
                     selected: 3 == _index,
                     onTap: () {
                       setState(() {

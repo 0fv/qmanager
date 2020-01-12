@@ -24,6 +24,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   dio: 3.0.7
+  toast: ^0.1.5
+  more: ^1.18.2
   date_range_picker: ^1.0.5
   json_annotation: ^3.0.0
   localstorage: ^3.0.0
@@ -84,8 +86,8 @@ targets:
           create_factory: true
           create_to_json: true
           disallow_unrecognized_keys: false
-          explicit_to_json: false
+          explicit_to_json: true
           field_rename: none
           ignore_unannotated: false
-          include_if_null: true
+          include_if_null: false
           nullable: true
