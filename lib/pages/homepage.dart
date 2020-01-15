@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Widget> _pages = [Edit(), Complete(),Process(),Finish(),QuestionGroup(),Question(),Member(),Permission()];
-  int _index = 7;
+  int _index = 5;
 
   @override
   Widget build(BuildContext context) {

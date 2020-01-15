@@ -8,7 +8,6 @@ import 'package:qmanager/widget/diolog/userdiolog.dart';
 import 'package:qmanager/widget/misc.dart';
 import 'package:qmanager/widget/table/mydatatable.dart';
 import 'package:qmanager/widget/topbar/opbutton.dart';
-import 'package:toast/toast.dart';
 
 class Permission extends StatelessWidget {
   final List<String> _questionnaireTitle = [
@@ -32,17 +31,16 @@ class Permission extends StatelessWidget {
           FlatButton(
               child: Text("修改密码"),
               onPressed: () async {
-                // var user = await userApi.getUserById(row["id"]);
-                // User u = User.fromJson(user);
                 User user = await updateUserPasswordDialog(context, row["id"]);
-                try {
-                  await userApi.updateUser(user);
-                  popToast("修改成功", context);
-                } catch (e) {
-                  DioError error = e as DioError;
-                  var msg = error.message;
+                if (user != null) {
+                  try {
+                    await userApi.updateUser(user);
+                    popToast("修改成功", context);
+                  } on DioError catch (error) {
+                    var msg = error.message;
 
-                  popToast(msg, context);
+                    popToast(msg, context);
+                  }
                 }
               }),
           FlatButton(
@@ -52,14 +50,16 @@ class Permission extends StatelessWidget {
                 print(user);
                 User u = User.fromJson(user["data"]);
                 User up = await updateUserPermission(context, u);
-                try {
-                  await userApi.updateUser(up);
-                  popToast("修改成功", context);
-                } catch (e) {
-                  DioError error = e as DioError;
-                  var msg = error.message;
+                if (up != null) {
+                  try {
+                    await userApi.updateUser(up);
+                    popToast("修改成功", context);
+                  } on DioError catch (error)  {
+              
+                    var msg = error.message;
 
-                  popToast(msg, context);
+                    popToast(msg, context);
+                  }
                 }
               }),
         ],
@@ -91,8 +91,8 @@ class Permission extends StatelessWidget {
                       Future.delayed(Duration(seconds: 2)).then((onValue) {
                         refresh();
                       });
-                    } catch (e) {
-                      DioError error = e as DioError;
+                    } on DioError catch (error) {
+                      
                       var msg = error.message;
                       popToast(msg, context);
                     }
@@ -107,8 +107,7 @@ class Permission extends StatelessWidget {
             Future.delayed(Duration(seconds: 2)).then((onValue) {
               refresh();
             });
-          } catch (e) {
-            DioError error = e as DioError;
+          } on DioError catch (error)  {
             var msg = error.message;
             popToast(msg, context);
           }

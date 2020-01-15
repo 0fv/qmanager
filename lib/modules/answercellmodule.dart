@@ -4,8 +4,10 @@ import 'package:qmanager/modules/inquirydatemodule.dart';
 
 abstract class AnswerCell {
   static List<AnswerCell> fromJson(var json) {
-    List<AnswerCell> l = [];
-
+    List<AnswerCell> l = <AnswerCell>[];
+    if (json == null){
+      return null;
+    }
     for (var j in json) {
       String type = j["type"];
       switch (type) {
@@ -20,7 +22,7 @@ abstract class AnswerCell {
           break;
       }
     }
-    return l;
+    return null;
   }
 
   toJson();

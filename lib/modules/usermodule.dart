@@ -4,7 +4,7 @@ import 'package:qmanager/modules/permissionmodule.dart';
 
 part 'usermodule.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class User implements JsonS {
   String id;
   String username;

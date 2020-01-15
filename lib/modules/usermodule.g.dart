@@ -24,12 +24,21 @@ User _$UserFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'id': instance.id,
-      'username': instance.username,
-      'passwd': instance.passwd,
-      'created_time': instance.createdTime?.toIso8601String(),
-      'last_login': instance.lastLogin?.toIso8601String(),
-      'is_super': instance.isSuper,
-      'permission': instance.permission,
-    };
+Map<String, dynamic> _$UserToJson(User instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('id', instance.id);
+  writeNotNull('username', instance.username);
+  writeNotNull('passwd', instance.passwd);
+  writeNotNull('created_time', instance.createdTime?.toIso8601String());
+  writeNotNull('last_login', instance.lastLogin?.toIso8601String());
+  writeNotNull('is_super', instance.isSuper);
+  writeNotNull('permission', instance.permission);
+  return val;
+}

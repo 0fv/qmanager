@@ -38,7 +38,7 @@ Future<User> updateUserPermission(BuildContext context, User user) {
 }
 
 class UserPermissionForm extends StatefulWidget {
-  User user;
+  final User user;
   UserPermissionForm({Key key, this.user}) : super(key: key);
 
   @override
@@ -58,8 +58,11 @@ class _UserPermissionFormState extends State<UserPermissionForm> {
         children: <Widget>[
           Container(
             color: Colors.redAccent,
-            padding: EdgeInsets.fromLTRB(20, 10, 0, 20),
-            child: Text("用户：${_user.username}权限设置",style: TextStyle(fontSize: 34),),
+            padding: EdgeInsets.fromLTRB(10, 10, 0, 20),
+            child: Text(
+              "用户：${_user.username}权限设置",
+              style: TextStyle(fontSize: 20),
+            ),
           ),
           ListTile(
             leading: Checkbox(
@@ -177,13 +180,20 @@ class _UserPasswordFormState extends State<UserPasswordForm> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(20),
-      height: 200,
+      height: 300,
       width: 500,
       child: Form(
         key: _formKey,
         autovalidate: false,
         child: ListView(
           children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 20),
+              child: Text(
+                "重置密码",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
             TextFormField(
               autofocus: false,
               controller: _password1,
