@@ -20,7 +20,8 @@ QuestionCellCollection _$QuestionCellCollectionFromJson(
     editedTime: json['edited_time'] == null
         ? null
         : DateTime.parse(json['edited_time'] as String),
-  )..answerCells = AnswerCell.fromJson(json['answer_cells']);
+    answerCells: AnswerCell.fromJson(json['answer_cells']),
+  );
 }
 
 Map<String, dynamic> _$QuestionCellCollectionToJson(

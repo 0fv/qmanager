@@ -18,9 +18,9 @@ class MyDataTable extends StatefulWidget {
   final GetTopButton getTopButton;
   final GetDataCell getDataCell;
   final GetType getMap;
-  MyDataTable(this.getListData, this.getOperationCell, this.titleList, this.obj,
-      this.titleName, this.getTopButton, this.getMap,
-      {this.getDataCell, Key key})
+  MyDataTable(this.getListData, this.titleList, this.obj, this.titleName,
+      this.getTopButton, this.getMap,
+      {this.getDataCell, this.getOperationCell, Key key})
       : super(key: key);
 
   @override
@@ -36,6 +36,9 @@ class _MyDataTableState extends State<MyDataTable> {
   List<dynamic> _selectedRow = [];
   List<dynamic> _allC = [];
   String _search;
+  double _cellWidth;
+  final GlobalKey globalKey = GlobalKey();
+
   DateTime _from = DateTime.parse('2019-12-01');
   DateTime _to = DateTime.parse("2019-12-02");
 
@@ -47,6 +50,23 @@ class _MyDataTableState extends State<MyDataTable> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    int row = widget.titleList.length;
+    if (widget.getOperationCell != null) {
+      row++;
+    }
+    double cellwidth = (width-1000) / row;
+    if (cellwidth != this._cellWidth) {
+      if (cellwidth <= 50) {
+        setState(() {
+          this._cellWidth = 50;
+        });
+      } else {
+        setState(() {
+          this._cellWidth = cellwidth;
+        });
+      }
+    }
     if (this._myTable == null) {
       return FutureBuilder(
         future: widget.getListData(),
@@ -96,7 +116,7 @@ class _MyDataTableState extends State<MyDataTable> {
     List<String> list = widget.obj.toMap().keys.toList();
     List<DataCell> cells = indexed(list).map((e) {
       if (widget.getDataCell == null) {
-        return DataCellUtil.getDataCell(row[e.value], 180);
+        return DataCellUtil.getDataCell(row[e.value], 100);
       } else {
         return widget.getDataCell(e.index, row[e.value]);
       }
@@ -259,6 +279,7 @@ class _MyDataTableState extends State<MyDataTable> {
         });
       }
     });
+
     return Builder(
       builder: (context) => SingleChildScrollView(
         child: PaginatedDataTable(
@@ -286,7 +307,7 @@ class _MyDataTableState extends State<MyDataTable> {
     List<DataColumn> c = widget.titleList.map((k) {
       return DataColumn(
           label: Container(
-            width: 200,
+            width: this._cellWidth,
             child: Text(k),
           ),
           onSort: _sort);
@@ -294,7 +315,7 @@ class _MyDataTableState extends State<MyDataTable> {
     if (widget.getOperationCell != null) {
       c.add(DataColumn(
           label: Container(
-            width: 100,
+        width: this._cellWidth,
         alignment: Alignment.center,
         child: Text("操作"),
       )));

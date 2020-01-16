@@ -19,7 +19,7 @@ class QuestionCellCollection implements JsonS{
   @JsonKey(name: "answer_cells",fromJson: AnswerCell.fromJson)
   List<AnswerCell> answerCells;
   QuestionCellCollection({
-    this.id,this.title,this.classification,this.createdAccount,this.createdTime,this.editedAccount,this.editedTime});
+    this.id,this.title,this.classification,this.createdAccount,this.createdTime,this.editedAccount,this.editedTime,this.answerCells});
   factory QuestionCellCollection.fromJson(Map<String,dynamic> json)=> _$QuestionCellCollectionFromJson(json);
   toJson()=> _$QuestionCellCollectionToJson(this);
 

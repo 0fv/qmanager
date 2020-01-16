@@ -54,8 +54,7 @@ class Permission extends StatelessWidget {
                   try {
                     await userApi.updateUser(up);
                     popToast("修改成功", context);
-                  } on DioError catch (error)  {
-              
+                  } on DioError catch (error) {
                     var msg = error.message;
 
                     popToast(msg, context);
@@ -92,7 +91,6 @@ class Permission extends StatelessWidget {
                         refresh();
                       });
                     } on DioError catch (error) {
-                      
                       var msg = error.message;
                       popToast(msg, context);
                     }
@@ -107,7 +105,7 @@ class Permission extends StatelessWidget {
             Future.delayed(Duration(seconds: 2)).then((onValue) {
               refresh();
             });
-          } on DioError catch (error)  {
+          } on DioError catch (error) {
             var msg = error.message;
             popToast(msg, context);
           }
@@ -134,7 +132,6 @@ class Permission extends StatelessWidget {
     return SizedBox.expand(
         child: MyDataTable(
       _getListData,
-      _getOC,
       _questionnaireTitle,
       User(
           id: "id",
@@ -146,6 +143,7 @@ class Permission extends StatelessWidget {
       _getTopBar,
       _getMap,
       getDataCell: _getDataCell,
+      getOperationCell: _getOC,
     ));
   }
 }

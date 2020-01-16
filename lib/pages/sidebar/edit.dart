@@ -57,7 +57,7 @@ class Edit extends StatelessWidget {
     return SizedBox.expand(
         child: MyDataTable(
       _getListData,
-      _getOC,
+      
       _questionnaireTitle,
       Questionnaire(
           id: "id",
@@ -67,7 +67,8 @@ class Edit extends StatelessWidget {
           modifyTime: DateTime.now()),
       "编辑中",
       _getTopBar,
-      _getMap
+      _getMap,
+      getOperationCell: _getOC,
     ));
   }
 }
