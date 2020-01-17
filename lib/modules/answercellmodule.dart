@@ -22,7 +22,7 @@ abstract class AnswerCell {
           break;
       }
     }
-    return null;
+    return l;
   }
 
   toJson();

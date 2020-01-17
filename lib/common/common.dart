@@ -9,7 +9,7 @@ const Map<String, String> qname = {
   "创建时间": "created_time",
   "修改时间": "modify_time"
 };
-typedef DataCell GetOperationCell(BuildContext context, var row);
+typedef DataCell GetOperationCell(BuildContext context, var row,VoidCallback refresh);
 typedef Future<dynamic> GetListData();
 typedef List<Widget> GetTopButton(
     List<dynamic> seletedRow, BuildContext context,VoidCallback refresh);

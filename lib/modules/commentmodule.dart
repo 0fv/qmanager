@@ -6,6 +6,9 @@ part 'commentmodule.g.dart';
 class Comment implements AnswerCell {
   String type = "comment";
   String comment;
+  int line=1;
+  int limit=100;
+  bool empty=false;
   Comment({this.comment});
   factory Comment.fromJosn(Map<String, dynamic> json)=>_$CommentFromJson(json);
   toJson() => _$CommentToJson(this);

@@ -23,7 +23,7 @@ class Permission extends StatelessWidget {
     return await userApi.getUserInfo();
   }
 
-  DataCell _getOC(BuildContext context, var row) {
+  DataCell _getOC(BuildContext context, var row,VoidCallback refresh) {
     return DataCell(Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

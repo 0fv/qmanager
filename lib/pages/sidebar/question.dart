@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:qmanager/api/questioncollectionapi.dart';
 import 'package:qmanager/modules/questioncellcollectionmodule.dart';
+import 'package:qmanager/widget/diolog/alertdiolog.dart';
 import 'package:qmanager/widget/diolog/questioncellcollection.dart';
 import 'package:qmanager/widget/misc.dart';
 import 'package:qmanager/widget/table/mydatatable.dart';
@@ -22,8 +23,44 @@ class Question extends StatelessWidget {
     return await questionCollectionApi.getData();
   }
 
-  DataCell _getOC(BuildContext context, var row) {
-    return DataCell(Text("Edit"));
+  DataCell _getOC(BuildContext context, var row, VoidCallback refresh) {
+    return DataCell(Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        FlatButton(
+          child: Text("查看问题"),
+          onPressed: () async {
+            var json = await questionCollectionApi.getDataById(row["id"]);
+
+            QuestionCellCollection questionCellCollection =
+                QuestionCellCollection.fromJson(json["data"]);
+            await viewQuestionCell(context, questionCellCollection);
+          },
+        ),
+        FlatButton(
+          child: Text("编辑"),
+          onPressed: () async {
+            var json = await questionCollectionApi.getDataById(row["id"]);
+            QuestionCellCollection questionCellCollection =
+                QuestionCellCollection.fromJson(json["data"]);
+            QuestionCellCollection q =
+                await editQuestionDialog(context, questionCellCollection);
+            if (q != null) {
+              try {
+                await questionCollectionApi.updateData(q);
+                popToast("修改成功", context);
+                Future.delayed(Duration(seconds: 2)).then((onValue) {
+                  refresh();
+                });
+              } on DioError catch (error) {
+                var msg = error.message;
+                popToast(msg, context);
+              }
+            }
+          },
+        )
+      ],
+    ));
   }
 
   List<Widget> _getTopBar(List<dynamic> selectedRow, BuildContext context,
@@ -43,19 +80,34 @@ class Question extends StatelessWidget {
               popToast(msg, context);
             }
           }
-        })
-        // if (q != null) {
-        //   try {
-        //     await userApi.addUser(u);
-        //     popToast("创建成功", context);
-        //     Future.delayed(Duration(seconds: 2)).then((onValue) {
-        //       refresh();
-        //     });
-        //   } on DioError catch (error)  {
-        //     var msg = error.message;
-        //     popToast(msg, context);
-        //   }
-        // }
+        }),
+        opButton(
+          context,
+          "删除",
+          Icon(
+            Icons.delete,
+            color: Colors.red,
+          ),
+          selectedRow.isEmpty
+              ? null
+              : () async {
+                  bool flag = await alertDialog("确认删除已选择帐号？", context);
+                  if (flag) {
+                    try {
+                      selectedRow.forEach((f) async {
+                        String id = f["id"];
+                        await questionCollectionApi.deleteUser(id);
+                      });
+                      popToast("已删除", context);
+                      Future.delayed(Duration(seconds: 2)).then((onValue) {
+                        refresh();
+                      });
+                    } on DioError catch (error) {
+                      var msg = error.message;
+                      popToast(msg, context);
+                    }
+                  }
+                }),
       ];
   Map<String, dynamic> _getMap(var m) {
     return QuestionCellCollection.fromJson(m).toMap();

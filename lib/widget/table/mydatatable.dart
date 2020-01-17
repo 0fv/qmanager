@@ -122,7 +122,7 @@ class _MyDataTableState extends State<MyDataTable> {
       }
     }).toList();
     if (widget.getOperationCell != null) {
-      cells.add(widget.getOperationCell(context, row));
+      cells.add(widget.getOperationCell(context, row,_refresh));
     }
     return cells;
   }

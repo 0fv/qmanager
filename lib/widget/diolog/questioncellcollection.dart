@@ -5,6 +5,8 @@ import 'package:qmanager/modules/choicemodule.dart';
 import 'package:qmanager/modules/commentmodule.dart';
 import 'package:qmanager/modules/inquirydatemodule.dart';
 import 'package:qmanager/modules/questioncellcollectionmodule.dart';
+import 'package:qmanager/widget/misc.dart';
+import 'package:qmanager/widget/table/questiontable.dart';
 
 Future<QuestionCellCollection> addQuestionDialog(BuildContext context) {
   return showDialog<QuestionCellCollection>(
@@ -17,8 +19,45 @@ Future<QuestionCellCollection> addQuestionDialog(BuildContext context) {
       });
 }
 
+Future<void> viewQuestionCell(
+    BuildContext context, QuestionCellCollection questionCellCollection) {
+  return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            width: 600,
+            height: 400,
+            child: view(context, questionCellCollection),
+            decoration: BoxDecoration(
+                backgroundBlendMode: BlendMode.softLight,
+                color: Color.fromRGBO(0, 0, 0, 100),
+                border: Border.all(
+                    color: Color.fromRGBO(0, 0, 0, 100),
+                    width: 0,
+                    style: BorderStyle.none)),
+          ),
+        );
+      });
+}
+
+Future<QuestionCellCollection> editQuestionDialog(
+    BuildContext context, QuestionCellCollection questionCellCollection) {
+  return showDialog<QuestionCellCollection>(
+      context: context,
+      builder: (context) {
+        var child = QuestionCellForm(
+          questionCellCollection: questionCellCollection,
+        );
+        return Dialog(
+          child: child,
+        );
+      });
+}
+
 class QuestionCellForm extends StatefulWidget {
-  QuestionCellForm({Key key}) : super(key: key);
+  final QuestionCellCollection questionCellCollection;
+  QuestionCellForm({Key key, this.questionCellCollection}) : super(key: key);
 
   @override
   _QuestionCellFormState createState() => _QuestionCellFormState();
@@ -32,12 +71,43 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
     [InquireDate()],
     [Choice(), Comment()]
   ];
+  TextEditingController _title = TextEditingController();
+  TextEditingController _classification = TextEditingController();
+  FocusNode _tfn = FocusNode();
+  FocusNode _cfn = FocusNode();
   int _index = 0;
   QuestionCellCollection _questionCell =
       QuestionCellCollection(answerCells: [Choice()]);
+  @override
+  void initState() {
+    super.initState();
+    this._tfn.addListener(() {
+      if (!_tfn.hasFocus) {
+        setState(() {
+          this._questionCell.title = _title.text;
+        });
+      }
+    });
+    this._cfn.addListener(() {
+      if (!_cfn.hasFocus) {
+        setState(() {
+          this._questionCell.classification = _classification.text;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.questionCellCollection != null) {
+      setState(() {
+        this._questionCell = widget.questionCellCollection;
+        this._title.text = widget.questionCellCollection.title;
+        this._classification.text =
+            widget.questionCellCollection.classification;
+        this._index = -1;
+      });
+    }
     return Container(
         height: 1000,
         width: 1000,
@@ -45,6 +115,7 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
         child: Container(
           alignment: Alignment.centerLeft,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               title(context),
               Expanded(child: content(context)),
@@ -53,30 +124,6 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
           ),
         ));
   }
-
-  Widget _input(
-    BuildContext context,
-    String name,
-    ValueChanged<String> vc, {
-    int length = 100,
-    TextEditingController tec,
-    FocusNode fn,
-  }) =>
-      Builder(
-        builder: (context) => Container(
-          child: TextField(
-            focusNode: fn,
-            minLines: 1,
-            maxLines: 1,
-            maxLength: length,
-            controller: tec,
-            decoration: InputDecoration(
-              hintText: name,
-            ),
-            onChanged: vc,
-          ),
-        ),
-      );
 
   Widget title(BuildContext context) => Text(
         "新建调查问题",
@@ -94,6 +141,7 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
               FlatButton(
                   child: Text("确定"),
                   onPressed: () {
+                    print(this._questionCell.toJson());
                     Navigator.of(context).pop(this._questionCell);
                   }),
             ],
@@ -104,24 +152,19 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
               Divider(
                 height: 2,
               ),
-              _input(
+              input(
                 context,
                 "问题标题",
-                (v) {
-                  setState(() {
-                    this._questionCell.title = v;
-                  });
-                },
+                null,
+                tec: this._title,
+                fn: this._tfn,
                 length: 50,
               ),
-              _input(context, "类型", (v) {
-                setState(() {
-                  this._questionCell.classification = v;
-                });
-              }, length: 10),
+              input(context, "类型", null,
+                  tec: this._classification, fn: this._cfn, length: 10),
               Container(
                   width: 1000,
-                  height: 750,
+                  height: 700,
                   child: Flex(
                     direction: Axis.horizontal,
                     children: <Widget>[
@@ -148,11 +191,24 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
                       Expanded(
                         flex: 3,
                         child: Flex(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           direction: Axis.vertical,
                           children: <Widget>[
+                            Text(
+                              "预览:",
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.grey),
+                              textAlign: TextAlign.left,
+                            ),
                             Expanded(
                               flex: 3,
                               child: view(context, this._questionCell),
+                            ),
+                            Text(
+                              "编辑:",
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.grey),
+                              textAlign: TextAlign.left,
                             ),
                             Expanded(
                               flex: 4,
@@ -165,86 +221,25 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
                   )),
             ],
           ));
-  Widget view(
-      BuildContext context, QuestionCellCollection questionCellCollection) {
-    String title = questionCellCollection.title;
-    List<Widget> list = <Widget>[
-      Text(
-        "预览:",
-        style: TextStyle(fontSize: 10, color: Colors.grey),
-        textAlign: TextAlign.left,
-      ),
-      Text(title == null ? "" : title,
-          style: TextStyle(fontSize: 20, color: Colors.black87)),
-    ];
-    var type = questionCellCollection.answerCells[0].runtimeType;
-    if (type == Choice) {
-      if (questionCellCollection.answerCells.length == 1) {
-        list.addAll(choiceRender(this._questionCell.answerCells[0], context));
-      }
-    }
-    return Builder(
-      builder: (context) {
-        return Card(
-            child: Container(
-          padding: EdgeInsets.all(5),
-          child: ListView(
-            children: list,
-          ),
-        ));
-      },
-    );
-  }
-
-  List<Widget> choiceRender(AnswerCell answerCell, BuildContext context) {
-    Choice choice = answerCell as Choice;
-    bool isMult = choice.isMulti;
-    if (choice.choice == null) {
-      return [];
-    }
-    if (isMult) {
-      return choice.choice
-          .map((f) => Builder(
-                builder: (context) => RadioListTile(
-                  dense: false,
-                  value: f,
-                  title: Text(f),
-                  onChanged: (v) {},
-                  groupValue: null,
-                ),
-              ))
-          .toList();
-    } else {
-      return choice.choice
-          .map((f) => Builder(
-                builder: (context) => CheckboxListTile(
-                  value: false,
-                  title: Text(f),
-                  onChanged: (bool value) {},
-                ),
-              ))
-          .toList();
-    }
-  }
 
   Widget edit(BuildContext context) {
     var type = this._questionCell.answerCells[0].runtimeType;
     if (type == Choice) {
       if (this._questionCell.answerCells.length == 1) {
         return choiceEdit(context);
+      } else {
+        return choiceCommetEdit(context);
       }
+    } else if (type == Comment) {
+      return commentEdit(context);
+    } else if (type == InquireDate) {
+      return dateEdit(context);
     }
   }
 
   Widget choiceEdit(BuildContext context) {
     Choice choice = this._questionCell.answerCells[0];
-    print(choice.toJson());
     List<Widget> list = [
-      Text(
-        "编辑:",
-        style: TextStyle(fontSize: 10, color: Colors.grey),
-        textAlign: TextAlign.left,
-      ),
       SwitchListTile(
         title: Text("是否多选"),
         value: choice.isMulti,
@@ -279,18 +274,20 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
           children: <Widget>[
             Expanded(
               flex: 9,
-              child: _input(context, "选项", (v) {}, tec: tec, fn: fn),
+              child: input(context, "选项", (v) {}, tec: tec, fn: fn),
             ),
             Expanded(
               flex: 1,
               child: IconButton(
-                icon: Icon(Icons.delete,color: Colors.redAccent,),
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.redAccent,
+                ),
                 onPressed: () {
                   setState(() {
                     Choice choice = this._questionCell.answerCells[0];
                     choice.choice.removeAt(f.index);
                     this._questionCell.answerCells[0] = choice;
-
                   });
                 },
               ),
@@ -299,7 +296,6 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
         );
         fn.addListener(() {
           if (!fn.hasFocus) {
-            print("zhahuish");
             setState(() {
               Choice choice = this._questionCell.answerCells[0];
               choice.choice[f.index] = tec.text;
@@ -310,6 +306,209 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
         return w;
       }).toList();
       list.insertAll(2, clist);
+    }
+    return Builder(
+        builder: (context) => Container(
+              padding: EdgeInsets.all(5),
+              child: ListView(children: list),
+            ));
+  }
+
+  Widget commentEdit(BuildContext context) {
+    Comment comment = this._questionCell.answerCells[0];
+    FocusNode fn1 = FocusNode();
+    FocusNode fn2 = FocusNode();
+    TextEditingController line =
+        TextEditingController(text: comment.line.toString());
+    TextEditingController limit =
+        TextEditingController(text: comment.limit.toString());
+    fn1.addListener(() {
+      if (!fn1.hasFocus) {
+        setState(() {
+          comment.line = int.parse(line.text);
+          this._questionCell.answerCells[0] = comment;
+        });
+      }
+    });
+    fn2.addListener(() {
+      if (!fn2.hasFocus) {
+        setState(() {
+          comment.limit = int.parse(limit.text);
+          this._questionCell.answerCells[0] = comment;
+        });
+      }
+    });
+    List<Widget> list = [
+      SwitchListTile(
+        title: Text("是否必填"),
+        value: comment.empty,
+        onChanged: (bool value) {
+          setState(() {
+            comment.empty = value;
+            this._questionCell.answerCells[0] = comment;
+          });
+        },
+      ),
+      ListTile(
+        leading: Text("行数："),
+        title: input(context, "请输入行数", null, tec: line, fn: fn1),
+      ),
+      ListTile(
+        leading: Text("总字数限制："),
+        title: input(context, "请输入字数限制", null, tec: limit, fn: fn2),
+      )
+    ];
+    return Builder(
+        builder: (context) => Container(
+              padding: EdgeInsets.all(5),
+              child: ListView(children: list),
+            ));
+  }
+
+  Widget dateEdit(BuildContext context) {
+    InquireDate date = this._questionCell.answerCells[0];
+
+    List<Widget> list = [
+      SwitchListTile(
+        title: Text("隐藏日期"),
+        value: date.vdate,
+        onChanged: (bool value) {
+          setState(() {
+            if (value == false || date.vtime == false) {
+              date.vdate = value;
+              this._questionCell.answerCells[0] = date;
+            }
+          });
+        },
+      ),
+      SwitchListTile(
+        title: Text("隐藏时间"),
+        value: date.vtime,
+        onChanged: (bool value) {
+          setState(() {
+            if (value == false || date.vdate == false) {
+              date.vtime = value;
+              this._questionCell.answerCells[0] = date;
+            }
+          });
+        },
+      ),
+    ];
+    return Builder(
+        builder: (context) => Container(
+              padding: EdgeInsets.all(5),
+              child: ListView(children: list),
+            ));
+  }
+
+  Widget choiceCommetEdit(BuildContext context) {
+    Comment comment = this._questionCell.answerCells[1];
+    Choice choice = this._questionCell.answerCells[0];
+    FocusNode fn1 = FocusNode();
+    FocusNode fn2 = FocusNode();
+    TextEditingController line =
+        TextEditingController(text: comment.line.toString());
+    TextEditingController limit =
+        TextEditingController(text: comment.limit.toString());
+    fn1.addListener(() {
+      if (!fn1.hasFocus) {
+        setState(() {
+          comment.line = int.parse(line.text);
+          this._questionCell.answerCells[1] = comment;
+        });
+      }
+    });
+    fn2.addListener(() {
+      if (!fn2.hasFocus) {
+        setState(() {
+          comment.limit = int.parse(limit.text);
+          this._questionCell.answerCells[1] = comment;
+        });
+      }
+    });
+    List<Widget> list = [
+      SwitchListTile(
+        title: Text("是否必填"),
+        value: comment.empty,
+        onChanged: (bool value) {
+          setState(() {
+            comment.empty = value;
+            this._questionCell.answerCells[1] = comment;
+          });
+        },
+      ),
+      ListTile(
+        leading: Text("行数："),
+        title: input(context, "请输入行数", null, tec: line, fn: fn1),
+      ),
+      ListTile(
+        leading: Text("总字数限制："),
+        title: input(context, "请输入字数限制", null, tec: limit, fn: fn2),
+      ),
+      SwitchListTile(
+        title: Text("是否多选"),
+        value: choice.isMulti,
+        onChanged: (bool value) {
+          setState(() {
+            choice.isMulti = value;
+            this._questionCell.answerCells[0] = choice;
+          });
+        },
+      ),
+      ListTile(
+        title: Text("添加选项"),
+        onTap: () {
+          setState(() {
+            if (choice.choice == null) {
+              choice.choice = List<String>();
+            }
+            choice.choice.add("选项");
+            this._questionCell.answerCells[0] = choice;
+          });
+        },
+      )
+    ];
+    if (choice.choice != null) {
+      List<Widget> clist = indexed(choice.choice).map((f) {
+        FocusNode fn = FocusNode();
+        TextEditingController tec = TextEditingController(text: f.value);
+        Widget w = Flex(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Expanded(
+              flex: 9,
+              child: input(context, "选项", (v) {}, tec: tec, fn: fn),
+            ),
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.redAccent,
+                ),
+                onPressed: () {
+                  setState(() {
+                    Choice choice = this._questionCell.answerCells[0];
+                    choice.choice.removeAt(f.index);
+                    this._questionCell.answerCells[0] = choice;
+                  });
+                },
+              ),
+            )
+          ],
+        );
+        fn.addListener(() {
+          if (!fn.hasFocus) {
+            setState(() {
+              Choice choice = this._questionCell.answerCells[0];
+              choice.choice[f.index] = tec.text;
+              this._questionCell.answerCells[0] = choice;
+            });
+          }
+        });
+        return w;
+      }).toList();
+      list.insertAll(4, clist);
     }
     return Builder(
         builder: (context) => Container(

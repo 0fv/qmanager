@@ -7,6 +7,8 @@ part 'inquirydatemodule.g.dart';
 class InquireDate implements AnswerCell {
   String type = "date";
   DateTime date;
+  bool vdate=false;
+  bool vtime=false;
   InquireDate({this.date});
   factory InquireDate.fromJson(Map<String,dynamic> json)=> _$InquireDateFromJson(json);
   toJson() => _$InquireDateToJson(this);

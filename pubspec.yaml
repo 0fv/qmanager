@@ -29,6 +29,7 @@ dependencies:
   date_range_picker: ^1.0.5
   json_annotation: ^3.0.0
   localstorage: ^3.0.0
+  date_format: ^1.0.8
   
 dev_dependencies:
   build_runner: ^1.0.0

@@ -18,7 +18,7 @@ class Edit extends StatelessWidget {
     return await questionnaireapi.getQuestionnariePage();
   }
 
-  DataCell _getOC( BuildContext context,var row) {
+  DataCell _getOC( BuildContext context,var row,VoidCallback refresh) {
     return DataCell(Row(
       children: <Widget>[
         FlatButton(
