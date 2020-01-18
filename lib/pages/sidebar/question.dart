@@ -91,7 +91,7 @@ class Question extends StatelessWidget {
           selectedRow.isEmpty
               ? null
               : () async {
-                  bool flag = await alertDialog("确认删除已选择帐号？", context);
+                  bool flag = await alertDialog("确认删除已选择问题？", context);
                   if (flag) {
                     try {
                       selectedRow.forEach((f) async {

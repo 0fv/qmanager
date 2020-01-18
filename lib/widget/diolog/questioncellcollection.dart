@@ -8,11 +8,12 @@ import 'package:qmanager/modules/questioncellcollectionmodule.dart';
 import 'package:qmanager/widget/misc.dart';
 import 'package:qmanager/widget/table/questiontable.dart';
 
-Future<QuestionCellCollection> addQuestionDialog(BuildContext context) {
+Future<QuestionCellCollection> addQuestionDialog(BuildContext context,
+    {bool collection = true}) {
   return showDialog<QuestionCellCollection>(
       context: context,
       builder: (context) {
-        var child = QuestionCellForm();
+        var child = QuestionCellForm(collection: collection);
         return Dialog(
           child: child,
         );
@@ -20,7 +21,7 @@ Future<QuestionCellCollection> addQuestionDialog(BuildContext context) {
 }
 
 Future<void> viewQuestionCell(
-    BuildContext context, QuestionCellCollection questionCellCollection) {
+    BuildContext context, QuestionCellCollection questionCellCollection,) {
   return showDialog<void>(
       context: context,
       builder: (context) {
@@ -42,12 +43,12 @@ Future<void> viewQuestionCell(
 }
 
 Future<QuestionCellCollection> editQuestionDialog(
-    BuildContext context, QuestionCellCollection questionCellCollection) {
+    BuildContext context, QuestionCellCollection questionCellCollection,{bool collection = true}) {
   return showDialog<QuestionCellCollection>(
       context: context,
       builder: (context) {
         var child = QuestionCellForm(
-          questionCellCollection: questionCellCollection,
+          questionCellCollection: questionCellCollection,collection: collection,
         );
         return Dialog(
           child: child,
@@ -56,8 +57,10 @@ Future<QuestionCellCollection> editQuestionDialog(
 }
 
 class QuestionCellForm extends StatefulWidget {
+  final bool collection;
   final QuestionCellCollection questionCellCollection;
-  QuestionCellForm({Key key, this.questionCellCollection}) : super(key: key);
+  QuestionCellForm({Key key, this.questionCellCollection, this.collection=true})
+      : super(key: key);
 
   @override
   _QuestionCellFormState createState() => _QuestionCellFormState();
@@ -160,8 +163,11 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
                 fn: this._tfn,
                 length: 50,
               ),
-              input(context, "类型", null,
-                  tec: this._classification, fn: this._cfn, length: 10),
+              Visibility(
+                visible: widget.collection,
+                child: input(context, "类型", null,
+                    tec: this._classification, fn: this._cfn, length: 10),
+              ),
               Container(
                   width: 1000,
                   height: 700,
@@ -305,7 +311,7 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
         });
         return w;
       }).toList();
-      list.insertAll(2, clist);
+      list.insertAll(1, clist);
     }
     return Builder(
         builder: (context) => Container(

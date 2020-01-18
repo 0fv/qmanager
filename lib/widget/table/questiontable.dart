@@ -8,7 +8,7 @@ import 'package:qmanager/modules/questioncellcollectionmodule.dart';
 import 'package:qmanager/widget/misc.dart';
 
 Widget view(
-    BuildContext context, QuestionCellCollection questionCellCollection) {
+    BuildContext context, QuestionCellCollection questionCellCollection,{colume=false}) {
   String title = questionCellCollection.title;
   List<Widget> list = <Widget>[
     Text(title == null ? "" : title,
@@ -27,17 +27,33 @@ Widget view(
   } else if (type == InquireDate) {
     list.add(dateRender(questionCellCollection.answerCells[0], context));
   }
-  return Builder(
+  if(colume){
+    return Builder(
     builder: (context) {
       return Card(
           child: Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: list,
+        ),
+      ));
+    },
+  );
+  }else{
+    return Builder(
+    builder: (context) {
+      return Card(
+          child: Container(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
         child: ListView(
           children: list,
         ),
       ));
     },
   );
+  }
 }
 
 List<Widget> choiceRender(AnswerCell answerCell, BuildContext context) {
@@ -46,7 +62,7 @@ List<Widget> choiceRender(AnswerCell answerCell, BuildContext context) {
   if (choice.choice == null) {
     return [];
   }
-  if (isMult) {
+  if (!isMult) {
     return choice.choice
         .map((f) => Builder(
               builder: (context) => RadioListTile(
@@ -83,7 +99,6 @@ Widget dateRender(AnswerCell answerCell, BuildContext context) {
   InquireDate date = answerCell as InquireDate;
   return Builder(builder: (context) {
     return Container(
-        width: 30,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[

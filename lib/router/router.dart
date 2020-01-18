@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:qmanager/pages/edit/questiongroupedit.dart';
 import 'package:qmanager/pages/edit/questionnaireedit.dart';
 import 'package:qmanager/pages/homepage.dart';
 
 final routes = {
   '/': (context, {arguments}) => HomePage(),
   '/questionnaireEdit': (context,{arguments}) => QuestionnaireEdit(arguments: arguments,),
+  '/questionGroupEdit': (context,{arguments}) => QuestionGroupEdit(arguments: arguments),
 };
 
 Route renderPage(settings) {

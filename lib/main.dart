@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:qmanager/pages/homepage.dart';
 import 'package:qmanager/router/router.dart';
 
 void main() => runApp(MyApp());
