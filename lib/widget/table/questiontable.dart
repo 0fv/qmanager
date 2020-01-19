@@ -33,6 +33,7 @@ Widget view(
       return Card(
           child: Container(
         padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,9 +1,21 @@
+import 'package:date_format/date_format.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:qmanager/common/common.dart';
+import 'package:qmanager/api/questionnaireapi.dart';
+import 'package:qmanager/modules/questioncellcollectionmodule.dart';
 import 'package:qmanager/modules/questioncellmodule.dart';
 import 'package:qmanager/modules/questiongroupmodule.dart';
+import 'package:qmanager/modules/questionnairemodule.dart';
+import 'package:qmanager/utils/adapterutil.dart';
+import 'package:qmanager/widget/diolog/alertdiolog.dart';
 import 'package:qmanager/widget/diolog/groupeditdiolog.dart';
-import 'package:qmanager/widget/diolog/questioncelldiolog.dart';
+import 'package:qmanager/widget/diolog/questioncellcollection.dart';
+import 'package:qmanager/widget/diolog/questioncollectiontablediolog.dart';
+import 'package:qmanager/widget/diolog/questiongroupcollectiontablediolog.dart';
+import 'package:qmanager/widget/misc.dart' as Misc;
+import 'package:qmanager/widget/misc.dart';
+import 'package:qmanager/widget/table/questiontable.dart';
+import 'package:uuid/uuid.dart';
 
 class QuestionnaireEdit extends StatefulWidget {
   final arguments;
@@ -14,27 +26,115 @@ class QuestionnaireEdit extends StatefulWidget {
 }
 
 class _QuestionnaireEditState extends State<QuestionnaireEdit> {
-  String _name = '';
-  String _introduce = '';
-  List<QuestionGroup> _questionGroupList = [];
+  Questionnaire _questionnaire =
+      Questionnaire(questionGroups: [], uuid: Uuid().v4());
+  TextEditingController _name = TextEditingController();
+  TextEditingController _introduce = TextEditingController();
+  QuestionnaireApi _questionnaireApi = QuestionnaireApi();
+  FocusNode _nfn = FocusNode();
+  FocusNode _ifn = FocusNode();
+  int _gIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    this._nfn.addListener(() {
+      if (!_nfn.hasFocus) {
+        setState(() {
+          this._questionnaire.name = _name.text;
+          this._gIndex = -1;
+        });
+      }
+    });
+    this._ifn.addListener(() {
+      if (!_ifn.hasFocus) {
+        setState(() {
+          this._questionnaire.introduce = _introduce.text;
+          this._gIndex = -1;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.arguments != null) {
+      setState(() {
+        this._questionnaire = widget.arguments;
+        this._name.text = widget.arguments.name;
+        this._introduce.text = widget.arguments.introduce;
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("编辑问卷"),
         actions: <Widget>[
           FlatButton(
             child: Text(
-              "保存",
+              "标记为“已完成”",
               style: TextStyle(color: Colors.white),
             ),
+            onPressed: () async {
+              bool flag = await alertDialog("确认更改为已完成？更改后不能继续编辑", context);
+              if (flag) {
+                try {
+                  await _questionnaireApi
+                      .changeToFinish(this._questionnaire.id);
+                  popToast("修改成功", context);
+                  Future.delayed(Duration(milliseconds: 300)).then((onValue) {
+                    Navigator.of(context).pop();
+                  });
+                } on DioError catch (error) {
+                  var msg = error.message;
+                  popToast(msg, context);
+                }
+                Navigator.of(context).pop();
+              }
+            },
           ),
           FlatButton(
             child: Text(
               "取消",
               style: TextStyle(color: Colors.white),
             ),
-          )
+            onPressed: () async {
+              bool flag = await alertDialog("尚未保存，确定退出？", context);
+              if (flag) {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+          FlatButton(
+            child: Text(
+              "保存",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () async {
+              if (widget.arguments == null) {
+                try {
+                  await _questionnaireApi.addData(this._questionnaire);
+                  popToast("创建成功", context);
+                  Future.delayed(Duration(seconds: 2)).then((onValue) {
+                    Navigator.of(context).pop();
+                  });
+                } on DioError catch (error) {
+                  var msg = error.message;
+                  popToast(msg, context);
+                }
+              } else {
+                try {
+                  await _questionnaireApi.updateData(this._questionnaire);
+                  popToast("修改成功", context);
+                  Future.delayed(Duration(seconds: 2)).then((onValue) {
+                    Navigator.of(context).pop();
+                  });
+                } on DioError catch (error) {
+                  var msg = error.message;
+                  popToast(msg, context);
+                }
+              }
+            },
+          ),
         ],
       ),
       body: Flex(
@@ -67,58 +167,64 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
           padding: EdgeInsets.all(20),
           children: <Widget>[
             Text("基本信息"),
-            _input("调查问卷名", (str) {
-              setState(() {
-                this._name = str;
-              });
-            }),
-            _input("简介", (str) {
-              setState(() {
-                this._introduce = str;
-              });
-            }, maxLines: 10, maxLength: 500),
-            Text("questionGroupDisplay"),
-            Text(this
-                ._questionGroupList
-                .map((f) => f.toJson())
-                .toList()
-                .toString()),
+            Misc.input(
+              context,
+              "问卷标题",
+              null,
+              tec: this._name,
+              fn: this._nfn,
+              length: 50,
+            ),
+            Misc.input(
+              context,
+              "问卷介绍",
+              null,
+              tec: this._introduce,
+              fn: this._ifn,
+              length: 249,
+            ),
+            Container(
+              child: Text("value:3${this._questionnaire.toJson()}"),
+            ),
             Text("编辑"),
-            groupAddWidget(),
+            FlatButton(
+              child: Text("添加空白问题组"),
+              onPressed: () {
+                setState(() {
+                  this._questionnaire.questionGroups.add(QuestionGroup(
+                      title: "问题组" +
+                          (this._questionnaire.questionGroups.length + 1)
+                              .toString()));
+                  this._gIndex = this._questionnaire.questionGroups.length - 1;
+                });
+              },
+            ),
+            FlatButton(
+              child: Text("添加现有问题组"),
+              onPressed: () async {
+                List<QuestionGroup> lqg =
+                    await questionGroupCollectionTable(context);
+                setState(() {
+                  this._questionnaire.questionGroups.addAll(lqg);
+                  this._gIndex = this._questionnaire.questionGroups.length - 1;
+                });
+              },
+            )
           ],
         );
       },
     );
   }
 
-  Widget _input(String name, SetValue setValue,
-      {int maxLines = 1, int maxLength}) {
-    return Container(
-      child: TextField(
-          minLines: 1,
-          maxLines: maxLines,
-          maxLength: maxLength,
-          decoration: InputDecoration(
-            hintText: name,
-            border: InputBorder.none,
-          ),
-          onChanged: setValue),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(1)),
-          border: Border.all(color: Colors.black12, width: 2)),
-    );
-  }
-
   Widget displayContainer(BuildContext context) {
     List<Widget> list = [
       Text(
-        " 标题：" + this._name,
+        " 标题：" + this._name.text,
         textAlign: TextAlign.left,
         style: TextStyle(fontSize: 30),
       ),
       Text(
-        " 介绍：" + this._introduce,
+        " 介绍：" + this._introduce.text,
         textAlign: TextAlign.left,
         style: TextStyle(fontSize: 15),
       ),
@@ -139,9 +245,10 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
               children: list,
             ),
           ),
-          children: List.generate(this._questionGroupList.length, (index) {
+          children:
+              List.generate(this._questionnaire.questionGroups.length, (index) {
             return questionGroupCard(
-                this._questionGroupList[index], context, index);
+                this._questionnaire.questionGroups[index], context, index);
           }),
           onReorder: (i1, i2) {
             setState(() {
@@ -154,48 +261,62 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
   }
 
   _swap(int oldIndex, int newIndex) {
-    if (oldIndex > this._questionGroupList.length - 1) {
-      oldIndex = this._questionGroupList.length - 1;
+    if (oldIndex > this._questionnaire.questionGroups.length - 1) {
+      oldIndex = this._questionnaire.questionGroups.length - 1;
     }
-    if (newIndex > this._questionGroupList.length - 1) {
-      newIndex = this._questionGroupList.length - 1;
+    if (newIndex > this._questionnaire.questionGroups.length - 1) {
+      newIndex = this._questionnaire.questionGroups.length - 1;
     }
-    var tmp = this._questionGroupList[oldIndex];
-    this._questionGroupList[oldIndex] = this._questionGroupList[newIndex];
-    this._questionGroupList[newIndex] = tmp;
-  }
-
-  Widget groupAddWidget() {
-    return Wrap(
-      children: <Widget>[
-        FlatButton(
-          child: Text("添加空白问题组"),
-          onPressed: () {
-            setState(() {
-              this._questionGroupList.add(QuestionGroup(
-                  title:
-                      "问题组" + (this._questionGroupList.length + 1).toString()));
-            });
-          },
-        ),
-        FlatButton(
-          child: Text("添加现有问题组"),
-          onPressed: () {},
-        )
-      ],
-    );
+    var tmp = this._questionnaire.questionGroups[oldIndex];
+    this._questionnaire.questionGroups[oldIndex] =
+        this._questionnaire.questionGroups[newIndex];
+    this._questionnaire.questionGroups[newIndex] = tmp;
   }
 
   Widget questionGroupCard(
       QuestionGroup questionGroup, BuildContext context, int key) {
     String title = questionGroup.title;
-
-    List<QuestionCell> questionCells = questionGroup.questionCells;
     return Builder(
         key: ValueKey(key),
         builder: (context) {
+          List list = <Widget>[];
+          var opButton = Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Row(
+              children: <Widget>[
+                FlatButton(
+                  child: Text("添加新问题"),
+                  onPressed: () async {
+                    QuestionCellCollection qcc =
+                        await addQuestionDialog(context, collection: false);
+                    QuestionCell qc = Adapterutil.getQuestion(qcc);
+                    _addQuestionCell(qc, key);
+                  },
+                ),
+                FlatButton(
+                  child: Text("添加现有问题"),
+                  onPressed: () async {
+                    List<QuestionCell> lqc =
+                        await questionCellCollectionTable(context);
+                    _addQuestionCellList(lqc, key);
+                  },
+                )
+              ],
+            ),
+          );
+          this._questionnaire.questionGroups[key].questionCells?.forEach((f) {
+            list.add(Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: view(
+                  context,
+                  Adapterutil.getQuestionCellCollection(f),
+                  colume: true,
+                )));
+          });
+          list.add(opButton);
           return Card(
             child: ExpansionTile(
+              initiallyExpanded: this._gIndex == key,
               title: Text(title),
               leading: Text(
                 (key + 1).toString() + ".",
@@ -207,11 +328,11 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                   IconButton(
                     icon: Icon(Icons.edit),
                     onPressed: () async {
-                      String gname = await questionGroupEditDialog(
-                          context, this._questionGroupList[key].title);
+                      String gname = await questionGroupEditDialog(context,
+                          this._questionnaire.questionGroups[key].title);
                       if (gname != null && gname.isNotEmpty) {
                         setState(() {
-                          this._questionGroupList[key].title = gname;
+                          this._questionnaire.questionGroups[key].title = gname;
                         });
                       }
                     },
@@ -225,23 +346,43 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                       bool b = await confirmDialog(context, "删除", "确认删除？");
                       if (b == true) {
                         setState(() {
-                          this._questionGroupList.removeAt(key);
+                          this._questionnaire.questionGroups.removeAt(key);
                         });
                       }
                     },
                   )
                 ]),
               ),
-              children: <Widget>[
-                FlatButton(
-                  child: Text("添加问题"),
-                  onPressed: () async {
-                    QuestionCell answerCell = await answerCellDialog(context);
-                  },
-                )
-              ],
+              children: list,
             ),
           );
         });
+  }
+
+  _addQuestionCell(QuestionCell qc, int key) {
+    if (qc != null) {
+      setState(() {
+        if (this._questionnaire.questionGroups[key].questionCells == null) {
+          this._questionnaire.questionGroups[key].questionCells =
+              <QuestionCell>[qc];
+        } else {
+          this._questionnaire.questionGroups[key].questionCells.add(qc);
+        }
+        this._gIndex = key;
+      });
+    }
+  }
+
+  _addQuestionCellList(List<QuestionCell> lqc, int key) {
+    if (lqc != null) {
+      setState(() {
+        if (this._questionnaire.questionGroups[key].questionCells == null) {
+          this._questionnaire.questionGroups[key].questionCells = lqc;
+        } else {
+          this._questionnaire.questionGroups[key].questionCells.addAll(lqc);
+        }
+        this._gIndex = key;
+      });
+    }
   }
 }

@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final MIN_M = 900;
+  final MIN_M = 996;
   double _width = 4000;
   List<Widget> _pages = [
     Edit(),
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
     Member(),
     Permission()
   ];
-  int _index = 5;
+  int _index = 0;
 
   @override
   Widget build(BuildContext context) {

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:qmanager/api/questioncollectionapi.dart';
 import 'package:qmanager/modules/questioncellcollectionmodule.dart';
 import 'package:qmanager/modules/questioncellmodule.dart';
-import 'package:qmanager/modules/questiongroupcollectionmodule.dart';
-import 'package:qmanager/utils/adapterutil.dart';
 import 'package:qmanager/widget/table/mydatatable.dart';
 import 'package:qmanager/widget/table/questiontable.dart';
 import 'package:qmanager/widget/topbar/opbutton.dart';
@@ -17,21 +15,7 @@ Future<List<QuestionCell>> questionCellCollectionTable(BuildContext context) =>
               child: QuestionCellTable(),
             ));
 
-Future<void> questionGroupView(
-    BuildContext context, QuestionGroupCollection questionGroupCollection) {
-  return showDialog<void>(
-      context: context,
-      builder: (context) => Container(
-          padding: EdgeInsets.fromLTRB(200, 20, 200, 10),
-          width: 700,
-          height: 1000,
-          child: ListView(
-            children: questionGroupCollection.questionCells
-                .map((f) =>
-                    view(context, Adapterutil.getQuestionCellCollection(f),colume: true))
-                .toList(),
-          )));
-}
+
 
 class QuestionCellTable extends StatelessWidget {
   final List<String> _questionnaireTitle = [
@@ -100,7 +84,8 @@ class QuestionCellTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.shrink(
+    return Container(
+      padding: EdgeInsets.fromLTRB(100, 10, 100, 100),
         child: MyDataTable(
       _getListData,
       _questionnaireTitle,
@@ -113,7 +98,7 @@ class QuestionCellTable extends StatelessWidget {
         createdTime: DateTime.now(),
         editedTime: DateTime.now(),
       ),
-      "问题管理",
+      "问题选择",
       _getTopBar,
       _getMap,
       getOperationCell: _getOC,

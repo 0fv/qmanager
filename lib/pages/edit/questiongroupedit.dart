@@ -52,7 +52,6 @@ class _QuestionGroupEditState extends State<QuestionGroupEdit> {
   Widget build(BuildContext context) {
     if (widget.arguments != null) {
       QuestionGroupCollection q = widget.arguments;
-      print(q.toJson());
       setState(() {
         this._questionGroupCollection = q;
         this._classification.text = q.classification;

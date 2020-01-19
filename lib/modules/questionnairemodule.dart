@@ -1,35 +1,47 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:qmanager/modules/jsonserializable.dart';
+import 'package:qmanager/modules/questiongroupmodule.dart';
+part 'questionnairemodule.g.dart';
 
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class Questionnaire implements JsonS {
-  final String id;
-  final String name;
-  final String introduce;
-  final DateTime createdTime;
-  final DateTime modifyTime;
+  String id;
+  String uuid;
+  String name;
+  String introduce;
+  @JsonKey(name: "created_time")
+  DateTime createdTime;
+  @JsonKey(name: "created_account")
+  String createdAccount;
+  @JsonKey(name: "edited_time")
+  DateTime editedTime;
+  @JsonKey(name: "edited_account")
+  String editedAccount;
+  @JsonKey(name: "question_groups")
+  List<QuestionGroup> questionGroups;
   Questionnaire(
-      {this.id, this.name, this.introduce, this.createdTime, this.modifyTime});
+      {this.id,
+      this.uuid,
+      this.name,
+      this.introduce,
+      this.createdTime,
+      this.editedTime,
+      this.createdAccount,
+      this.editedAccount,
+      this.questionGroups});
 
-  Questionnaire.fromJson(Map<String, dynamic> json)
-      : id = json["_id"],
-        name = json["name"],
-        introduce = json["introduce"],
-        createdTime = DateTime.parse(json["created_time"]),
-        modifyTime = json["modify_time"]!=null?DateTime.parse(json["modify_time"]):DateTime.parse("1970-01-01");
-        
+  factory Questionnaire.fromJson(Map<String, dynamic> json) =>
+      _$QuestionnaireFromJson(json);
+
   @override
-  Map<String, String> toJson() => {
-        '_id': id,
-        'name': name,
-        'introduce': introduce,
-        'created_time': createdTime.toString(),
-        'modify_time': modifyTime.toString()
-      };
-      @override
+  Map<String, dynamic> toJson() => _$QuestionnaireToJson(this);
   Map<String, dynamic> toMap() => {
-        '_id': id,
+        'id': id,
         'name': name,
         'introduce': introduce,
-        'created_time': createdTime,
-        'modify_time': modifyTime
+        'created_time': this.createdTime,
+        'created_account': this.createdAccount,
+        'edited_time': this.editedTime,
+        'edited_account': this.editedAccount,
       };
 }

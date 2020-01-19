@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:qmanager/api/questiongroupcollectionapi.dart';
 import 'package:qmanager/modules/questiongroupcollectionmodule.dart';
 import 'package:qmanager/widget/diolog/alertdiolog.dart';
-import 'package:qmanager/widget/diolog/questioncollectiontablediolog.dart';
+import 'package:qmanager/widget/diolog/questiongroupcollectiontablediolog.dart';
 import 'package:qmanager/widget/misc.dart';
 import 'package:qmanager/widget/table/mydatatable.dart';
 import 'package:qmanager/widget/topbar/opbutton.dart';
@@ -38,12 +38,12 @@ class QuestionGroup extends StatelessWidget {
           },
         ),
         FlatButton(
-          child: Text("预览问题"),
+          child: Text("预览问题组内容"),
           onPressed: () async {
             var r = await questionGroupCollectionApi.getDataById(row["id"]);
             QuestionGroupCollection q =
                 QuestionGroupCollection.fromJson(r["data"]);
-                await questionGroupView(context,q);
+            await questionGroupView(context, q);
           },
         )
       ],
@@ -106,7 +106,7 @@ class QuestionGroup extends StatelessWidget {
         createdTime: DateTime.now(),
         editedTime: DateTime.now(),
       ),
-      "问题管理",
+      "问题组管理",
       _getTopBar,
       _getMap,
       getOperationCell: _getOC,

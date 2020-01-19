@@ -1,16 +1,16 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:qmanager/modules/questioncellmodule.dart';
 
+part 'questiongroupmodule.g.dart';
+
+@JsonSerializable(includeIfNull: false, explicitToJson: true)
 class QuestionGroup {
   String title;
+  @JsonKey(name: "question_cells",)
   List<QuestionCell> questionCells;
   QuestionGroup({this.title, this.questionCells});
 
-  QuestionGroup.fromJson(Map<String, dynamic> json)
-      : title = json["title"],
-        questionCells = json["question_cells"] != null
-            ? List<QuestionCell>.from(json["question_cells"])
-            : null;
+  factory QuestionGroup.fromJson(Map<String, dynamic> json)=> _$QuestionGroupFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      {"title": title, "question_cells": questionCells};
+  Map<String, dynamic> toJson() =>_$QuestionGroupToJson(this);
 }

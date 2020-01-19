@@ -26,6 +26,7 @@ dependencies:
   dio: 3.0.7
   toast: ^0.1.5
   more: ^1.18.2
+  uuid: 2.0.4
   date_range_picker: ^1.0.5
   json_annotation: ^3.0.0
   localstorage: ^3.0.0
