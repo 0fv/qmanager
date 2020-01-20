@@ -304,15 +304,72 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
               ],
             ),
           );
-          this._questionnaire.questionGroups[key].questionCells?.forEach((f) {
-            list.add(Padding(
+          var questions = this._questionnaire.questionGroups[key].questionCells;
+          if (questions != null) {
+            for (var i = 0; i < questions.length; i++) {
+              list.add(Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: view(
-                  context,
-                  Adapterutil.getQuestionCellCollection(f),
-                  colume: true,
-                )));
-          });
+                child: Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: view(context,
+                          Adapterutil.getQuestionCellCollection(questions[i]),
+                          colume: true),
+                      flex: 14,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () async {
+                              var qcc = await editQuestionDialog(
+                                  context,
+                                  Adapterutil.getQuestionCellCollection(
+                                      questions[i]),
+                                  collection: false);
+                              setState(() {
+                                this
+                                        ._questionnaire
+                                        .questionGroups[key]
+                                        .questionCells[i] =
+                                    Adapterutil.getQuestion(qcc);
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.redAccent),
+                            onPressed: () {
+                              setState(() {
+                                this
+                                    ._questionnaire
+                                    .questionGroups[key]
+                                    .questionCells
+                                    .removeAt(i);
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ));
+            }
+          }
+          // ?.forEach((f) {
+          //   list.add(Padding(
+          //       padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+          //       child: view(
+          //         context,
+          //         Adapterutil.getQuestionCellCollection(f),
+          //         colume: true,
+          //       )));
+          // });
           list.add(opButton);
           return Card(
             child: ExpansionTile(
