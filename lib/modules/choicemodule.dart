@@ -3,10 +3,10 @@ import 'package:qmanager/modules/answercellmodule.dart';
 
 part 'choicemodule.g.dart';
 
-@JsonSerializable(nullable: false)
+@JsonSerializable(nullable: true)
 class Choice implements AnswerCell {
   String type = "choice";
-  List<String> choice;
+  List<String> choice=[];
   @JsonKey(name: 'is_multi')
   bool isMulti;
   Choice({this.choice, this.isMulti=false});

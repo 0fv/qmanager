@@ -16,8 +16,16 @@ class UserApi{
   Future<dynamic> updateUser(User user){
     return _api.updateData("/user", user.toJson());
   }
+  Future<dynamic> updatePassword(User user) {
+    return _api.updateData("/user/password", user.toJson());
+  }
+   Future<dynamic> updatePermission(User user) {
+    return _api.updateData("/user/permission", user.toJson());
+  }
 
   Future<dynamic> deleteUser(String id) {
     return _api.deleteData("/user", id);
   }
+
+  
 }

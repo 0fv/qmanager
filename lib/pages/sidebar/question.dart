@@ -49,7 +49,7 @@ class Question extends StatelessWidget {
               try {
                 await questionCollectionApi.updateData(q);
                 popToast("修改成功", context);
-                Future.delayed(Duration(seconds: 2)).then((onValue) {
+                Future.delayed(Duration(milliseconds: 400)).then((onValue) {
                   refresh();
                 });
               } on DioError catch (error) {
@@ -72,7 +72,7 @@ class Question extends StatelessWidget {
             try {
               await questionCollectionApi.addData(q);
               popToast("创建成功", context);
-              Future.delayed(Duration(seconds: 2)).then((onValue) {
+              Future.delayed(Duration(milliseconds: 400)).then((onValue) {
                 refresh();
               });
             } on DioError catch (error) {

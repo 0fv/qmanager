@@ -23,7 +23,7 @@ class Permission extends StatelessWidget {
     return await userApi.getUserInfo();
   }
 
-  DataCell _getOC(BuildContext context, var row,VoidCallback refresh) {
+  DataCell _getOC(BuildContext context, var row, VoidCallback refresh) {
     return DataCell(Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -31,17 +31,7 @@ class Permission extends StatelessWidget {
           FlatButton(
               child: Text("修改密码"),
               onPressed: () async {
-                User user = await updateUserPasswordDialog(context, row["id"]);
-                if (user != null) {
-                  try {
-                    await userApi.updateUser(user);
-                    popToast("修改成功", context);
-                  } on DioError catch (error) {
-                    var msg = error.message;
-
-                    popToast(msg, context);
-                  }
-                }
+                await updateUserPasswordDialog(context, row["id"]);
               }),
           FlatButton(
               child: Text("修改权限"),
@@ -49,17 +39,7 @@ class Permission extends StatelessWidget {
                 var user = await userApi.getUserById(row["id"]);
                 print(user);
                 User u = User.fromJson(user["data"]);
-                User up = await updateUserPermission(context, u);
-                if (up != null) {
-                  try {
-                    await userApi.updateUser(up);
-                    popToast("修改成功", context);
-                  } on DioError catch (error) {
-                    var msg = error.message;
-
-                    popToast(msg, context);
-                  }
-                }
+                await updateUserPermission(context, u);
               }),
         ],
       ),

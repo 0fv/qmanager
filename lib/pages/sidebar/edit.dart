@@ -31,7 +31,11 @@ class Edit extends StatelessWidget {
           onPressed: () async {
             var r = await questionnaireApi.getDataById(row["id"]);
             Questionnaire q = Questionnaire.fromJson(r["data"]);
-            Navigator.pushNamed(context, '/questionnaireEdit', arguments: q);
+            var v = await Navigator.pushNamed(context, '/questionnaireEdit',
+                arguments: q);
+            if (v == true) {
+              refresh();
+            }
           },
         )
       ],
@@ -71,8 +75,11 @@ class Edit extends StatelessWidget {
                     }
                   }
                 }),
-      opButton(context, "新建问卷表", Icon(Icons.create), () {
-        Navigator.pushNamed(context, "/questionnaireEdit");
+      opButton(context, "新建问卷表", Icon(Icons.create), () async {
+        var v = await Navigator.pushNamed(context, '/questionnaireEdit');
+        if (v == true) {
+          refresh();
+        }
       })
     ];
   }

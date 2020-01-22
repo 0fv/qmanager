@@ -37,6 +37,7 @@ class _MyDataTableState extends State<MyDataTable> {
   List<dynamic> _allC = [];
   String _search;
   double _cellWidth;
+  final CELL_MIN_WIDTH=80.0;
   final GlobalKey globalKey = GlobalKey();
 
   DateTime _from = DateTime.parse('2019-12-01');
@@ -57,9 +58,9 @@ class _MyDataTableState extends State<MyDataTable> {
     }
     double cellwidth = (width-1000) / row;
     if (cellwidth != this._cellWidth) {
-      if (cellwidth <= 50) {
+      if (cellwidth <= CELL_MIN_WIDTH) {
         setState(() {
-          this._cellWidth = 50;
+          this._cellWidth = CELL_MIN_WIDTH;
         });
       } else {
         setState(() {

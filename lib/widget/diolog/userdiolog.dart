@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:qmanager/api/userapi.dart';
 import 'package:qmanager/modules/permissionmodule.dart';
 import 'package:qmanager/modules/usermodule.dart';
+import 'package:qmanager/widget/misc.dart';
 
 Future<User> addUserDialog(BuildContext context) {
   return showDialog<User>(
@@ -13,8 +16,8 @@ Future<User> addUserDialog(BuildContext context) {
       });
 }
 
-Future<User> updateUserPasswordDialog(BuildContext context, String id) {
-  return showDialog<User>(
+Future<void> updateUserPasswordDialog(BuildContext context, String id) {
+  return showDialog<void>(
       context: context,
       builder: (context) {
         var child = UserPasswordForm(
@@ -26,8 +29,8 @@ Future<User> updateUserPasswordDialog(BuildContext context, String id) {
       });
 }
 
-Future<User> updateUserPermission(BuildContext context, User user) {
-  return showDialog<User>(
+Future<void> updateUserPermission(BuildContext context, User user) {
+  return showDialog<void>(
       context: context,
       builder: (context) {
         var child = UserPermissionForm(user: user);
@@ -47,6 +50,7 @@ class UserPermissionForm extends StatefulWidget {
 
 class _UserPermissionFormState extends State<UserPermissionForm> {
   User _user;
+  final UserApi _userApi = UserApi();
   @override
   Widget build(BuildContext context) {
     _user = widget.user;
@@ -153,8 +157,15 @@ class _UserPermissionFormState extends State<UserPermissionForm> {
               ),
               FlatButton(
                   child: Text("确定"),
-                  onPressed: () {
-                    Navigator.of(context).pop(_user);
+                  onPressed: () async {
+                    try {
+                      await _userApi.updatePermission(this._user);
+                      popToast("修改成功", context);
+                    } on DioError catch (error) {
+                      var msg = error.message;
+                      popToast(msg, context);
+                    }
+                    Navigator.of(context).pop();
                   }),
             ],
           )
@@ -176,6 +187,7 @@ class _UserPasswordFormState extends State<UserPasswordForm> {
   TextEditingController _password1 = TextEditingController();
   TextEditingController _password2 = TextEditingController();
   GlobalKey _formKey = new GlobalKey<FormState>();
+  final UserApi _userApi = UserApi();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -221,14 +233,21 @@ class _UserPasswordFormState extends State<UserPasswordForm> {
                 ),
                 FlatButton(
                     child: Text("确定"),
-                    onPressed: () {
+                    onPressed: () async {
                       if ((_formKey.currentState as FormState).validate()) {
                         String passwd = _password2.text;
                         User user = User(
                           id: widget.id,
                           passwd: passwd,
                         );
-                        Navigator.of(context).pop(user);
+                        try {
+                          await _userApi.updatePassword(user);
+                          Navigator.of(context).pop();
+                          popToast("修改成功", context);
+                        } on DioError catch (error) {
+                          var msg = error.message;
+                          popToast(msg, context);
+                        }
                       }
                     }),
               ],

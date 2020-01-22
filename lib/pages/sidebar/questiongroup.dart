@@ -34,7 +34,11 @@ class QuestionGroup extends StatelessWidget {
             var r = await questionGroupCollectionApi.getDataById(row["id"]);
             QuestionGroupCollection q =
                 QuestionGroupCollection.fromJson(r["data"]);
-            Navigator.of(context).pushNamed("/questionGroupEdit", arguments: q);
+            var v = await Navigator.pushNamed(context, "/questionGroupEdit",
+                arguments: q);
+            if (v == true) {
+              refresh();
+            }
           },
         ),
         FlatButton(
@@ -53,8 +57,11 @@ class QuestionGroup extends StatelessWidget {
   List<Widget> _getTopBar(List<dynamic> selectedRow, BuildContext context,
           VoidCallback refresh) =>
       <Widget>[
-        opButton(context, "新建问题组", Icon(Icons.create), () {
-          Navigator.of(context).pushNamed("/questionGroupEdit");
+        opButton(context, "新建问题组", Icon(Icons.create), () async {
+          var v = await Navigator.pushNamed(context, "/questionGroupEdit");
+          if (v == true) {
+            refresh();
+          }
         }),
         opButton(context, "刷新", Icon(Icons.refresh), () {
           refresh();

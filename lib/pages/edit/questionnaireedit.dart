@@ -1,4 +1,3 @@
-import 'package:date_format/date_format.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:qmanager/api/questionnaireapi.dart';
@@ -115,7 +114,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                   await _questionnaireApi.addData(this._questionnaire);
                   popToast("创建成功", context);
                   Future.delayed(Duration(seconds: 2)).then((onValue) {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context,true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;
@@ -126,7 +125,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                   await _questionnaireApi.updateData(this._questionnaire);
                   popToast("修改成功", context);
                   Future.delayed(Duration(seconds: 2)).then((onValue) {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context,true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;

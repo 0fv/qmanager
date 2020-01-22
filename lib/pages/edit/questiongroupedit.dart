@@ -85,8 +85,8 @@ class _QuestionGroupEditState extends State<QuestionGroupEdit> {
                   await questionGroupCollectionApi
                       .addData(this._questionGroupCollection);
                   popToast("创建成功", context);
-                  Future.delayed(Duration(seconds: 2)).then((onValue) {
-                    Navigator.of(context).pop();
+                  Future.delayed(Duration(milliseconds: 200)).then((onValue) {
+                    Navigator.pop(context,true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;
@@ -97,8 +97,8 @@ class _QuestionGroupEditState extends State<QuestionGroupEdit> {
                   await questionGroupCollectionApi
                       .updateData(this._questionGroupCollection);
                   popToast("修改成功", context);
-                  Future.delayed(Duration(seconds: 2)).then((onValue) {
-                    Navigator.of(context).pop();
+                  Future.delayed(Duration(milliseconds: 200)).then((onValue) {
+                    Navigator.pop(context,true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;

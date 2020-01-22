@@ -8,7 +8,7 @@ part of 'choicemodule.dart';
 
 Choice _$ChoiceFromJson(Map<String, dynamic> json) {
   return Choice(
-    choice: (json['choice'] as List).map((e) => e as String).toList(),
+    choice: (json['choice'] as List)?.map((e) => e as String)?.toList(),
     isMulti: json['is_multi'] as bool,
   )..type = json['type'] as String;
 }
