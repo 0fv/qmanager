@@ -104,16 +104,6 @@ class _MyDataTableState extends State<MyDataTable> {
   }
 
   List<DataCell> _getCells(var row) {
-    // List<DataCell> cells = widget.obj
-    //     .toJson()
-    //     .keys
-    //     .map((value) => DataCell(Container(
-    //           width: 200,
-    //           child: Text(
-    //             row[value] == null ? "-" : row[value].toString(),
-    //           ),
-    //         )))
-    //     .toList();
     List<String> list = widget.obj.toMap().keys.toList();
     List<DataCell> cells = indexed(list).map((e) {
       if (widget.getDataCell == null) {
@@ -219,9 +209,9 @@ class _MyDataTableState extends State<MyDataTable> {
     RegExp k = new RegExp(r".*" + str + ".*");
     for (var e in this._allC) {
       if (k.hasMatch(e[this._search])) {
-        l.add(e);
+  l.add(e);
       }
-    }
+    }      
     setState(() {
       this._myTable = MyTable(l, _getCells);
     });

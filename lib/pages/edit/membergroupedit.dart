@@ -1,45 +1,38 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:qmanager/api/membergroupapi.dart';
-import 'package:qmanager/modules/membergroupmodule.dart';
+import 'package:qmanager/api/memberapi.dart';
+import 'package:qmanager/modules/membermodule.dart';
 import 'package:qmanager/widget/diolog/alertdiolog.dart';
-import 'package:qmanager/widget/diolog/membergroupdiolog.dart';
+import 'package:qmanager/widget/diolog/memberdiolog.dart';
 import 'package:qmanager/widget/misc.dart';
 import 'package:qmanager/widget/table/mydatatable.dart';
 import 'package:qmanager/widget/topbar/opbutton.dart';
 
-class Member extends StatelessWidget {
-  final List<String> _title = ["id", "名称", "创建时间", "创建账户", "最后修改时间", "最后修改人"];
-  final MemberGroupApi memberGroupApi = MemberGroupApi();
+class MemeberGroupEdit extends StatelessWidget {
+  final argumemt;
+  MemberApi _memberApi;
+  MemeberGroupEdit({Key key, this.argumemt}) {
+    this._memberApi = MemberApi(argumemt);
+  }
 
+  final List<String> _title = ["id", "姓名", "邮箱号", "附加信息"];
   Future<dynamic> _getListData() async {
-    return await memberGroupApi.getData();
+    return await _memberApi.getData();
   }
 
   DataCell _getOC(BuildContext context, var row, VoidCallback refresh) {
     return DataCell(Row(
       children: <Widget>[
         FlatButton(
-          child: Text("编辑组名"),
+          child: Text("编辑"),
           onPressed: () async {
-            var mg = MemberGroup(groupName: row["group_name"], id: row["id"]);
-            bool v = await memberGroupEditDialog(context, memberGroup: mg);
-            if (v == true) {
+            bool v = await memberEditdialog(context, argumemt,
+                member: Member.fromJson(row));
+            if (v) {
               refresh();
             }
           },
         ),
-        FlatButton(
-          child: Text("编辑成员"),
-          onPressed: () async {
-            String gid = row["id"];
-            var v = await Navigator.pushNamed(context, '/memberGroupEdit',
-                arguments: gid);
-            if (v == true) {
-              refresh();
-            }
-          },
-        )
       ],
     ));
   }
@@ -57,12 +50,12 @@ class Member extends StatelessWidget {
           selectedRow.isEmpty
               ? null
               : () async {
-                  bool flag = await alertDialog("确认删除已选被调查组？", context);
+                  bool flag = await alertDialog("确认删除已选择人员？", context);
                   if (flag) {
                     try {
                       selectedRow.forEach((f) async {
                         String id = f["id"];
-                        await memberGroupApi.deleteData(id);
+                        await _memberApi.deleteData(id);
                       });
                       popToast("已删除", context);
                       Future.delayed(Duration(seconds: 2)).then((onValue) {
@@ -77,9 +70,9 @@ class Member extends StatelessWidget {
       opButton(context, "刷新", Icon(Icons.refresh), () {
         refresh();
       }),
-      opButton(context, "新建被调查组", Icon(Icons.create), () async {
-        var v = await memberGroupEditDialog(context);
-        if (v == true) {
+      opButton(context, "新建成员", Icon(Icons.create), () async {
+        bool v = await memberEditdialog(context, argumemt);
+        if (v) {
           refresh();
         }
       })
@@ -87,26 +80,30 @@ class Member extends StatelessWidget {
   }
 
   Map<String, dynamic> _getMap(var m) {
-    return MemberGroup.fromJson(m).toMap();
+    return Member.fromJson(m).toMap();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-        child: MyDataTable(
-      _getListData,
-      _title,
-      MemberGroup(
-          id: "id",
-          groupName: "name",
-          createdTime: DateTime.now(),
-          createdAccount: "x",
-          editedTime: DateTime.now(),
-          editedAccount: "x"),
-      "成员组管理",
-      _getTopBar,
-      _getMap,
-      getOperationCell: _getOC,
-    ));
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("成员管理"),
+        ),
+        body: SizedBox.expand(
+          child: MyDataTable(
+            _getListData,
+            _title,
+            Member(
+              id: "id",
+              name: "name",
+              email: "email",
+              additionalInfo: "if",
+            ),
+            "成员管理",
+            _getTopBar,
+            _getMap,
+            getOperationCell: _getOC,
+          ),
+        ));
   }
 }
