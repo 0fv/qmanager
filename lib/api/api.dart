@@ -13,13 +13,13 @@ class Api {
     this._dio = Dio();
     _setTokenInterceptor();
     this._dio.interceptors.add(InterceptorsWrapper(onRequest: (option) {
-      option.baseUrl = server;
-    },onResponse: (o){
-      var data = o.data;
-      if(200!=data["code"]){
-        throw data["msg"];
-      }
-    }));
+          option.baseUrl = server;
+        }, onResponse: (o) {
+          var data = o.data;
+          if (200 != data["code"]) {
+            throw data["msg"];
+          }
+        }));
     this._dio.interceptors.add(this._tokenInterceptor);
   }
   static _getInstance() {
@@ -33,7 +33,7 @@ class Api {
   _setTokenInterceptor() {
     String token = storage.getItem("token");
     this._tokenInterceptor = InterceptorsWrapper(onRequest: (o) {
-      o.headers["token"] = 
+      o.headers["token"] =
           "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1ODA1MjIxNTAsInVzZXJuYW1lIjoiYWRtaW4ifQ.6sMHAfPvjMdfV7yuQ9X09V6UieQ3BqoeT17yY1XdJg0";
     });
   }
@@ -53,16 +53,19 @@ class Api {
     Response response = await this._dio.get(uri, queryParameters: param);
     return response.data;
   }
-  Future<dynamic> postData(String uri,var param) async{
-    Response response = await this._dio.post(uri,data:param);
+
+  Future<dynamic> postData(String uri, var param) async {
+    Response response = await this._dio.post(uri, data: param);
     return response.data;
   }
-  Future<dynamic> updateData(String uri,var param) async{
-    Response response = await this._dio.put(uri,data: param);
+
+  Future<dynamic> updateData(String uri, var param) async {
+    Response response = await this._dio.put(uri, data: param);
     return response.data;
   }
-  Future<dynamic> deleteData(String uri,var param) async{
-    Response response = await this._dio.delete(uri+"/"+param);
+
+  Future<dynamic> deleteData(String uri, var param) async {
+    Response response = await this._dio.delete(uri + "/" + param);
     return response.data;
   }
 }

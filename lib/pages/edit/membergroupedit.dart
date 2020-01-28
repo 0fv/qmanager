@@ -75,6 +75,15 @@ class MemeberGroupEdit extends StatelessWidget {
         if (v) {
           refresh();
         }
+      }),
+      opButton(context, "下载导入模板", Icon(Icons.arrow_downward), () {
+        this._memberApi.template();
+      }),
+      opButton(context, "导入", Icon(Icons.file_upload), () async {
+        this._memberApi.uploadData(this.argumemt, refresh, context);
+      }),
+      opButton(context, "导出", Icon(Icons.file_download), () {
+        this._memberApi.export(argumemt);
       })
     ];
   }
