@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qmanager/pages/sidebar/complete.dart';
 import 'package:qmanager/pages/sidebar/edit.dart';
+import 'package:qmanager/pages/sidebar/email.dart';
 import 'package:qmanager/pages/sidebar/finish.dart';
 import 'package:qmanager/pages/sidebar/member.dart';
 import 'package:qmanager/pages/sidebar/permission.dart';
@@ -24,9 +25,10 @@ class _HomePageState extends State<HomePage> {
     QuestionGroup(),
     Question(),
     Member(),
-    Permission()
+    Permission(),
+    EmailSetting()
   ];
-  int _index = 0;
+  int _index = 8;
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +167,14 @@ class _HomePageState extends State<HomePage> {
                   selected: 7 == _index,
                   onTap: () {
                     setIndex(7, pop);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.email),
+                  title: Text("邮箱设置"),
+                  selected: 8 == _index,
+                  onTap: () {
+                    setIndex(8, pop);
                   },
                 ),
               ],
