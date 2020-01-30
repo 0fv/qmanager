@@ -87,7 +87,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                   var msg = error.message;
                   popToast(msg, context);
                 }
-                Navigator.of(context).pop();
+                Navigator.pop(context, true);
               }
             },
           ),
@@ -114,7 +114,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                   await _questionnaireApi.addData(this._questionnaire);
                   popToast("创建成功", context);
                   Future.delayed(Duration(seconds: 2)).then((onValue) {
-                    Navigator.pop(context,true);
+                    Navigator.pop(context, true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;
@@ -125,7 +125,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                   await _questionnaireApi.updateData(this._questionnaire);
                   popToast("修改成功", context);
                   Future.delayed(Duration(seconds: 2)).then((onValue) {
-                    Navigator.pop(context,true);
+                    Navigator.pop(context, true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;
@@ -360,15 +360,6 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
               ));
             }
           }
-          // ?.forEach((f) {
-          //   list.add(Padding(
-          //       padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-          //       child: view(
-          //         context,
-          //         Adapterutil.getQuestionCellCollection(f),
-          //         colume: true,
-          //       )));
-          // });
           list.add(opButton);
           return Card(
             child: ExpansionTile(

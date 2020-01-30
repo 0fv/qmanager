@@ -5,10 +5,19 @@ import 'package:qmanager/modules/choicemodule.dart';
 import 'package:qmanager/modules/commentmodule.dart';
 import 'package:qmanager/modules/inquirydatemodule.dart';
 import 'package:qmanager/modules/questioncellcollectionmodule.dart';
+import 'package:qmanager/modules/questioncellmodule.dart';
+import 'package:qmanager/utils/adapterutil.dart';
 import 'package:qmanager/widget/misc.dart';
 
-Widget view(
-    BuildContext context, QuestionCellCollection questionCellCollection,{colume=false}) {
+Widget view2(BuildContext context, QuestionCell questionCell,
+    {column = false, card = true}) {
+  QuestionCellCollection qcc =
+      Adapterutil.getQuestionCellCollection(questionCell);
+  return view(context, qcc, colume: column, card: card);
+}
+
+Widget view(BuildContext context, QuestionCellCollection questionCellCollection,
+    {colume = false, card = true}) {
   String title = questionCellCollection.title;
   List<Widget> list = <Widget>[
     Text(title == null ? "" : title,
@@ -27,33 +36,59 @@ Widget view(
   } else if (type == InquireDate) {
     list.add(dateRender(questionCellCollection.answerCells[0], context));
   }
-  if(colume){
+  if (colume) {
     return Builder(
-    builder: (context) {
-      return Card(
-          child: Container(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: list,
-        ),
-      ));
-    },
-  );
-  }else{
+      builder: (context) {
+        if (card) {
+          return Card(
+              child: Container(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: list,
+            ),
+          ));
+        } else {
+          return Container(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: list,
+            ),
+            decoration: BoxDecoration(
+                border: Border(
+                    top: BorderSide(
+              color: Colors.blueGrey,
+            ))),
+          );
+        }
+      },
+    );
+  } else {
     return Builder(
-    builder: (context) {
-      return Card(
-          child: Container(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: ListView(
-          children: list,
-        ),
-      ));
-    },
-  );
+      builder: (context) {
+        if (card) {
+          return Card(
+              child: Container(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            child: ListView(
+              children: list,
+            ),
+          ));
+        } else {
+          return Container(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            child: ListView(
+              children: list,
+            ),
+          );
+        }
+      },
+    );
   }
 }
 
@@ -91,8 +126,7 @@ List<Widget> choiceRender(AnswerCell answerCell, BuildContext context) {
 Widget commentRender(AnswerCell answerCell, BuildContext context) {
   Comment comment = answerCell as Comment;
   return Builder(
-    builder: (context) =>
-        input(context, "", null, line: comment.line, length: comment.limit),
+    builder: (context) => input3(context, comment.line, comment.limit),
   );
 }
 
@@ -101,29 +135,29 @@ Widget dateRender(AnswerCell answerCell, BuildContext context) {
   return Builder(builder: (context) {
     return Container(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "请选择：",
-              style: TextStyle(fontSize: 20),
-            ),
-            Visibility(
-              visible: !date.vdate,
-              child: Text(
-                formatDate(DateTime.parse("2020-01-01 00:00:00"),
-                    [yyyy, "-", mm, "-", "dd"]),
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Visibility(
-              visible: !date.vtime,
-              child: Text(
-                formatDate(DateTime.parse("2020-01-01 00:00:00"),
-                    [HH, ':', nn, ':', ss]),
-                style: TextStyle(fontSize: 20),
-              ),
-            )
-          ],
-        ));
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          "请选择：",
+          style: TextStyle(fontSize: 20),
+        ),
+        Visibility(
+          visible: !date.vdate,
+          child: Text(
+            formatDate(DateTime.parse("2020-01-01 00:00:00"),
+                [yyyy, "-", mm, "-", "dd"]),
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+        Visibility(
+          visible: !date.vtime,
+          child: Text(
+            formatDate(
+                DateTime.parse("2020-01-01 00:00:00"), [HH, ':', nn, ':', ss]),
+            style: TextStyle(fontSize: 20),
+          ),
+        )
+      ],
+    ));
   });
 }

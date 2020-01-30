@@ -37,7 +37,7 @@ class _MyDataTableState extends State<MyDataTable> {
   List<dynamic> _allC = [];
   String _search;
   double _cellWidth;
-  final CELL_MIN_WIDTH=80.0;
+  final CELL_MIN_WIDTH = 80.0;
   final GlobalKey globalKey = GlobalKey();
 
   DateTime _from = DateTime.parse('2019-12-01');
@@ -56,7 +56,7 @@ class _MyDataTableState extends State<MyDataTable> {
     if (widget.getOperationCell != null) {
       row++;
     }
-    double cellwidth = (width-1000) / row;
+    double cellwidth = (width - 1000) / row;
     if (cellwidth != this._cellWidth) {
       if (cellwidth <= CELL_MIN_WIDTH) {
         setState(() {
@@ -113,7 +113,7 @@ class _MyDataTableState extends State<MyDataTable> {
       }
     }).toList();
     if (widget.getOperationCell != null) {
-      cells.add(widget.getOperationCell(context, row,_refresh));
+      cells.add(widget.getOperationCell(context, row, _refresh));
     }
     return cells;
   }
@@ -209,9 +209,9 @@ class _MyDataTableState extends State<MyDataTable> {
     RegExp k = new RegExp(r".*" + str + ".*");
     for (var e in this._allC) {
       if (k.hasMatch(e[this._search])) {
-  l.add(e);
+        l.add(e);
       }
-    }      
+    }
     setState(() {
       this._myTable = MyTable(l, _getCells);
     });
@@ -220,6 +220,7 @@ class _MyDataTableState extends State<MyDataTable> {
   searchDate() async {
     final List<DateTime> picked = await DateRagePicker.showDatePicker(
         context: context,
+        locale: Locale("zh"),
         initialFirstDate: this._from,
         initialLastDate: this._to,
         firstDate: new DateTime(2019),
@@ -275,7 +276,7 @@ class _MyDataTableState extends State<MyDataTable> {
       builder: (context) => SingleChildScrollView(
         child: PaginatedDataTable(
           availableRowsPerPage: [10, 15, 20],
-          actions: setAction(context),
+          actions: setAction(context),     
           rowsPerPage: this._defaultRowPageCount,
           onRowsPerPageChanged: (value) {
             setState(() {

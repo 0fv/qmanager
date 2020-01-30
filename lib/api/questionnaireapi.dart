@@ -24,17 +24,20 @@ class QuestionnaireApi {
     return _api.getData(_baseUri + "/" + id);
   }
 
+  Future<dynamic> getFinishDataById(String id) {
+    return _api.getData(_baseUri + "/" + id, param: {"finish": 1});
+  }
+
   Future<dynamic> deleteData(String id) {
     return _api.deleteData(_baseUri, id);
   }
-  Future<dynamic> changeEditStatus(String id,int isEdit){
-    Map<String,String> m = {
-      "id": id,
-      "isEdit": isEdit.toString()
-    };
-    return _api.getData(_baseUri+"/edit",param:m);
+
+  Future<dynamic> changeEditStatus(String id, int isEdit) {
+    Map<String, String> m = {"id": id, "isEdit": isEdit.toString()};
+    return _api.getData(_baseUri + "/edit", param: m);
   }
-  Future<dynamic> changeToFinish(String id){
+
+  Future<dynamic> changeToFinish(String id) {
     return changeEditStatus(id, 1);
   }
 }

@@ -9,10 +9,10 @@ import 'package:qmanager/widget/table/mydatatable.dart';
 import 'package:qmanager/widget/topbar/opbutton.dart';
 
 class MemeberGroupEdit extends StatelessWidget {
-  final argumemt;
+  final argumemts;
   MemberApi _memberApi;
-  MemeberGroupEdit({Key key, this.argumemt}) {
-    this._memberApi = MemberApi(argumemt);
+  MemeberGroupEdit({Key key, this.argumemts}) {
+    this._memberApi = MemberApi(argumemts);
   }
 
   final List<String> _title = ["id", "姓名", "邮箱号", "附加信息"];
@@ -26,7 +26,7 @@ class MemeberGroupEdit extends StatelessWidget {
         FlatButton(
           child: Text("编辑"),
           onPressed: () async {
-            bool v = await memberEditdialog(context, argumemt,
+            bool v = await memberEditdialog(context, argumemts,
                 member: Member.fromJson(row));
             if (v) {
               refresh();
@@ -71,7 +71,7 @@ class MemeberGroupEdit extends StatelessWidget {
         refresh();
       }),
       opButton(context, "新建成员", Icon(Icons.create), () async {
-        bool v = await memberEditdialog(context, argumemt);
+        bool v = await memberEditdialog(context, argumemts);
         if (v) {
           refresh();
         }
@@ -80,10 +80,10 @@ class MemeberGroupEdit extends StatelessWidget {
         this._memberApi.template();
       }),
       opButton(context, "导入", Icon(Icons.file_upload), () async {
-        this._memberApi.uploadData(this.argumemt, refresh, context);
+        this._memberApi.uploadData(this.argumemts, refresh, context);
       }),
       opButton(context, "导出", Icon(Icons.file_download), () {
-        this._memberApi.export(argumemt);
+        this._memberApi.export(argumemts);
       })
     ];
   }

@@ -3,7 +3,9 @@ import 'package:qmanager/modules/jsonserializable.dart';
 
 part 'membergroupmodule.g.dart';
 
-@JsonSerializable(includeIfNull: false,)
+@JsonSerializable(
+  includeIfNull: false,
+)
 class MemberGroup implements JsonS {
   String id;
   @JsonKey(name: "group_name")
@@ -25,8 +27,13 @@ class MemberGroup implements JsonS {
       this.editedTime});
   factory MemberGroup.fromJson(Map<String, dynamic> json) =>
       _$MemberGroupFromJson(json);
-  Map<String, dynamic> toJson() => _$MemberGroupToJson(this);
 
+  bool operator ==(o) =>
+      o is MemberGroup && id == o.id && groupName == o.groupName;
+  @override
+  int get hashCode => this.id.hashCode;
+
+  Map<String, dynamic> toJson() => _$MemberGroupToJson(this);
   @override
   Map<String, dynamic> toMap() => {
         'id': this.id,

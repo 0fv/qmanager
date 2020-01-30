@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     Permission(),
     EmailSetting()
   ];
-  int _index = 8;
+  int _index = 1;
 
   @override
   Widget build(BuildContext context) {
