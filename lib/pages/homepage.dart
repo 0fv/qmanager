@@ -3,6 +3,8 @@ import 'package:qmanager/pages/sidebar/complete.dart';
 import 'package:qmanager/pages/sidebar/edit.dart';
 import 'package:qmanager/pages/sidebar/email.dart';
 import 'package:qmanager/pages/sidebar/finish.dart';
+import 'package:qmanager/pages/sidebar/maillog.dart';
+import 'package:qmanager/pages/sidebar/mailschedule.dart';
 import 'package:qmanager/pages/sidebar/member.dart';
 import 'package:qmanager/pages/sidebar/permission.dart';
 import 'package:qmanager/pages/sidebar/process.dart';
@@ -26,7 +28,9 @@ class _HomePageState extends State<HomePage> {
     Question(),
     Member(),
     Permission(),
-    EmailSetting()
+    EmailSetting(),
+    MailLogPage(),
+    MailSchedulePage(),
   ];
   int _index = 1;
 
@@ -175,6 +179,22 @@ class _HomePageState extends State<HomePage> {
                   selected: 8 == _index,
                   onTap: () {
                     setIndex(8, pop);
+                  },
+                ),
+                 ListTile(
+                  leading: Icon(Icons.dehaze),
+                  title: Text("邮箱日志"),
+                  selected: 9 == _index,
+                  onTap: () {
+                    setIndex(9, pop);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.schedule),
+                  title: Text("未发送邮件"),
+                  selected: 10 == _index,
+                  onTap: () {
+                    setIndex(10, pop);
                   },
                 ),
               ],

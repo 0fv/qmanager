@@ -32,7 +32,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
   QuestionnaireApi _questionnaireApi = QuestionnaireApi();
   FocusNode _nfn = FocusNode();
   FocusNode _ifn = FocusNode();
-  int _gIndex = -1;
+  Set<int> isOpen = Set();
 
   @override
   void initState() {
@@ -41,7 +41,6 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
       if (!_nfn.hasFocus) {
         setState(() {
           this._questionnaire.name = _name.text;
-          this._gIndex = -1;
         });
       }
     });
@@ -49,7 +48,6 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
       if (!_ifn.hasFocus) {
         setState(() {
           this._questionnaire.introduce = _introduce.text;
-          this._gIndex = -1;
         });
       }
     });
@@ -194,7 +192,6 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                       title: "问题组" +
                           (this._questionnaire.questionGroups.length + 1)
                               .toString()));
-                  this._gIndex = this._questionnaire.questionGroups.length - 1;
                 });
               },
             ),
@@ -205,10 +202,29 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                     await questionGroupCollectionTable(context);
                 setState(() {
                   this._questionnaire.questionGroups.addAll(lqg);
-                  this._gIndex = this._questionnaire.questionGroups.length - 1;
+                });
+              },
+            ),
+            FlatButton(
+              child: Text("收起全部问题组"),
+              onPressed: () {
+                setState(() {
+                  this.isOpen.clear();
+                });
+              },
+            ),
+            FlatButton(
+              child: Text("展开全部问题组"),
+              onPressed: () {
+                setState(() {
+                  int l= this._questionnaire.questionGroups.length;
+                  for (var i = 0; i < l; i++) {
+                    this.isOpen.add(i);
+                  }
                 });
               },
             )
+            
           ],
         );
       },
@@ -270,6 +286,9 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
     this._questionnaire.questionGroups[oldIndex] =
         this._questionnaire.questionGroups[newIndex];
     this._questionnaire.questionGroups[newIndex] = tmp;
+    if (isOpen.remove(oldIndex)) {
+      isOpen.add(newIndex);
+    }
   }
 
   Widget questionGroupCard(
@@ -351,7 +370,25 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                                     .removeAt(i);
                               });
                             },
-                          )
+                          ),
+                          Text("必填"),
+                          Switch(
+                              onChanged: (v) {
+                                int x = v ? 1 : 0;
+                                setState(() {
+                                  this
+                                      ._questionnaire
+                                      .questionGroups[key]
+                                      .questionCells[i]
+                                      .mustAnswer = x;
+                                });
+                              },
+                              value: 1 ==
+                                  this
+                                      ._questionnaire
+                                      .questionGroups[key]
+                                      .questionCells[i]
+                                      .mustAnswer),
                         ],
                       ),
                     )
@@ -363,7 +400,14 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
           list.add(opButton);
           return Card(
             child: ExpansionTile(
-              initiallyExpanded: this._gIndex == key,
+              initiallyExpanded: isOpen.contains(key),
+              onExpansionChanged: (v) {
+                if (v) {
+                  isOpen.add(key);
+                } else {
+                  isOpen.remove(key);
+                }
+              },
               title: Text(title),
               leading: Text(
                 (key + 1).toString() + ".",
@@ -415,7 +459,6 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
         } else {
           this._questionnaire.questionGroups[key].questionCells.add(qc);
         }
-        this._gIndex = key;
       });
     }
   }
@@ -428,7 +471,6 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
         } else {
           this._questionnaire.questionGroups[key].questionCells.addAll(lqc);
         }
-        this._gIndex = key;
       });
     }
   }

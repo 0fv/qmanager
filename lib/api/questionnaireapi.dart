@@ -40,4 +40,7 @@ class QuestionnaireApi {
   Future<dynamic> changeToFinish(String id) {
     return changeEditStatus(id, 1);
   }
+  Future<dynamic> createNewInstance(Map<String,dynamic> map){
+    return _api.postData(_baseUri+"/create", map);
+  }
 }

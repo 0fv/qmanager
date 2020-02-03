@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:qmanager/api/questionnaireapi.dart';
 import 'package:qmanager/modules/membergroupmodule.dart';
 import 'package:qmanager/utils/dateutil.dart';
 import 'package:qmanager/widget/diolog/membergrouptablediolog.dart';
@@ -22,11 +24,12 @@ class NewInstanceForm extends StatefulWidget {
 class _NewInstanceFormState extends State<NewInstanceForm> {
   TextEditingController _name = TextEditingController();
   TextEditingController _pageSize = TextEditingController();
+  final QuestionnaireApi _api = QuestionnaireApi();
   bool _useMember = false;
   DateTime _mailSendingTime = DateTime.now();
   DateTime _from = DateUtil.getNow();
   DateTime _to = DateUtil.getNow();
-  int _pageination = 0;
+  int _pagination=0;
   Set<MemberGroup> _memberGroups = Set();
   @override
   void initState() {
@@ -73,17 +76,23 @@ class _NewInstanceFormState extends State<NewInstanceForm> {
               ),
               FlatButton(child: Text("确定"), onPressed: () async {
                 Map<String,dynamic> map = {
-                  "id": widget.row['id'],
+                  "questionnaire_id": widget.row['id'],
                   "name": _name.text,
                   "is_anonymous": _useMember?1:0,
                   "member_id": _memberGroups.map((f)=>f.id).toList(),
-                  "send_mail_time": _mailSendingTime.toIso8601String(),
-                  "from": _from.toIso8601String(),
-                  "to": _to.toIso8601String(),
-                  "pageination": _pageination,
+                  "send_mail_time": DateUtil.format2(this._mailSendingTime),
+                  "from": DateUtil.format2(this._from),
+                  "to": DateUtil.format2(this._to),
+                  "pagination": _pagination,
                   "page_size": _pageSize.text
                 };
-                popToast(map.toString(), context);
+                try{
+                  await _api.createNewInstance(map);
+                  popToast("创建成功", context);
+                  Navigator.of(context).pop();
+                }on DioError catch(e){
+                  popToast(e.message, context);
+                }
               }),
             ],
           ));
@@ -178,7 +187,7 @@ class _NewInstanceFormState extends State<NewInstanceForm> {
                               TimeOfDay.fromDateTime(this._mailSendingTime),
                         );
                         setState(() {
-                          this._from = DateUtil.setTime(ft, f);
+                          this._mailSendingTime = DateUtil.setTime(ft, f);
                         });
                       }
                     },
@@ -239,36 +248,36 @@ class _NewInstanceFormState extends State<NewInstanceForm> {
             Text("分页设置"),
             RadioListTile(
               title: Text("不分页"),
-              groupValue: this._pageination,
+              groupValue: this._pagination,
               onChanged: (value) {
                 setState(() {
-                  this._pageination = value;
+                  this._pagination = value;
                 });
               },
               value: 0,
             ),
             RadioListTile(
               title: Text("按组分页"),
-              groupValue: this._pageination,
+              groupValue: this._pagination,
               onChanged: (value) {
                 setState(() {
-                  this._pageination = value;
+                  this._pagination = value;
                 });
               },
               value: 1,
             ),
             RadioListTile(
               title: Text("根据条数分页"),
-              groupValue: this._pageination,
+              groupValue: this._pagination,
               onChanged: (value) {
                 setState(() {
-                  this._pageination = value;
+                  this._pagination = value;
                 });
               },
               value: 2,
             ),
             Visibility(
-              visible: this._pageination == 2,
+              visible: this._pagination == 2,
               child: input2(context, "每页条数", _pageSize,
                   wl: [WhitelistingTextInputFormatter.digitsOnly]),
             )

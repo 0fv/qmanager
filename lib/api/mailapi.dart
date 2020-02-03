@@ -10,4 +10,10 @@ class MailApi {
   Future<dynamic> updateData(Email email){
     return this._api.updateData(_baseUri, email.toJson());
   }
+  Future<dynamic> getMailLog() async{
+    return this._api.getData(_baseUri+"/log");
+  }
+    Future<dynamic> getMailSchedule() async{
+    return this._api.getData(_baseUri+"/schedule");
+  }
 }

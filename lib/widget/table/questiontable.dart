@@ -11,18 +11,38 @@ import 'package:qmanager/widget/misc.dart';
 
 Widget view2(BuildContext context, QuestionCell questionCell,
     {column = false, card = true}) {
+  bool i = (questionCell.mustAnswer == 1);
   QuestionCellCollection qcc =
       Adapterutil.getQuestionCellCollection(questionCell);
-  return view(context, qcc, colume: column, card: card);
+  return view(context, qcc, colume: column, card: card, mustAnswer: i);
 }
 
 Widget view(BuildContext context, QuestionCellCollection questionCellCollection,
-    {colume = false, card = true}) {
+    {colume = false, card = true, bool mustAnswer}) {
   String title = questionCellCollection.title;
-  List<Widget> list = <Widget>[
-    Text(title == null ? "" : title,
-        style: TextStyle(fontSize: 20, color: Colors.black87)),
-  ];
+  var t;
+  if (mustAnswer == true) {
+    t = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(title == null ? "" : title,
+            style: TextStyle(fontSize: 20, color: Colors.black87)),
+        Text(
+          "*",
+          style: TextStyle(color: Colors.red),
+        )
+      ],
+    );
+  } else {
+    t =  Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(title == null ? "" : title,
+            style: TextStyle(fontSize: 20, color: Colors.black87)),
+      ],
+    );
+  }
+  List<Widget> list = <Widget>[t];
   var type = questionCellCollection.answerCells[0].runtimeType;
   if (type == Choice) {
     if (questionCellCollection.answerCells.length == 1) {

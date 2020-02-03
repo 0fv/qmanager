@@ -25,4 +25,7 @@ class DateUtil {
   static String format(DateTime dateTime) {
     return formatDate(dateTime,  [yyyy, "-", mm, "-", "dd"," ",HH,":",nn]);
   }
+   static String format2(DateTime dateTime) {
+    return formatDate(dateTime,  [yyyy, "-", mm, "-", "dd"," ",HH,":",nn,":",ss]);
+  }
 }

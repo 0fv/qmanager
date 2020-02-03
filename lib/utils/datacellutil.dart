@@ -4,7 +4,6 @@ import 'package:qmanager/common/common.dart';
 class DataCellUtil {
   static DataCell getDataCell(var value, double width,{SetText setText= setStringText}) {
     return DataCell(Container(
-        // width: width,
         child: setText(value)));
   }
   static Text setStringText(var value){

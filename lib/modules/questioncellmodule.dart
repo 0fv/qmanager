@@ -8,6 +8,8 @@ class QuestionCell {
   @JsonKey(name: "answer_cells",fromJson: AnswerCell.fromJson)
   List<AnswerCell> answerCells;
   QuestionCell({this.title, this.answerCells});
+  @JsonKey(name: "must_answer")
+  int mustAnswer=1;
   factory QuestionCell.fromJson(Map<String,dynamic> json)=> _$QuestionCellFromJson(json);
   toJson()=> _$QuestionCellToJson(this);
 

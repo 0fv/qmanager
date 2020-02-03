@@ -86,19 +86,19 @@ class _QuestionGroupEditState extends State<QuestionGroupEdit> {
                       .addData(this._questionGroupCollection);
                   popToast("创建成功", context);
                   Future.delayed(Duration(milliseconds: 200)).then((onValue) {
-                    Navigator.pop(context,true);
+                    Navigator.pop(context, true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;
                   popToast(msg, context);
                 }
-              }else{
+              } else {
                 try {
                   await questionGroupCollectionApi
                       .updateData(this._questionGroupCollection);
                   popToast("修改成功", context);
                   Future.delayed(Duration(milliseconds: 200)).then((onValue) {
-                    Navigator.pop(context,true);
+                    Navigator.pop(context, true);
                   });
                 } on DioError catch (error) {
                   var msg = error.message;
@@ -226,7 +226,23 @@ class _QuestionGroupEditState extends State<QuestionGroupEdit> {
                         this._questionGroupCollection.questionCells.removeAt(i);
                       });
                     },
-                  )
+                  ),
+                  Text("必填"),
+                  Switch(
+                      onChanged: (v) {
+                        int x = v ? 1 : 0;
+                        setState(() {
+                          this
+                              ._questionGroupCollection
+                              .questionCells[i]
+                              .mustAnswer = x;
+                        });
+                      },
+                      value: 1 ==
+                          this
+                              ._questionGroupCollection
+                              .questionCells[i]
+                              .mustAnswer),
                 ],
               ),
             )
