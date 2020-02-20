@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ListTile(
                   leading: Icon(Icons.autorenew),
-                  title: Text("正在进行"),
+                  title: Text("正在运行的问卷实例"),
                   selected: 2 == _index,
                   onTap: () {
                     setIndex(2, pop);
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ListTile(
                   leading: Icon(Icons.beenhere),
-                  title: Text("调查已完成"),
+                  title: Text("已完成的问卷实例"),
                   selected: 3 == _index,
                   onTap: () {
                     setIndex(3, pop);
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.format_align_left),
+                  leading: Icon(Icons.group_work),
                   title: Text("问题组管理"),
                   selected: 4 == _index,
                   onTap: () {
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.format_align_left),
+                  leading: Icon(Icons.question_answer),
                   title: Text("问题管理"),
                   selected: 5 == _index,
                   onTap: () {
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.format_align_left),
+                  leading: Icon(Icons.group),
                   title: Text("被调查人员组管理"),
                   selected: 6 == _index,
                   onTap: () {
@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                  ListTile(
-                  leading: Icon(Icons.dehaze),
+                  leading: Icon(Icons.assignment),
                   title: Text("邮箱日志"),
                   selected: 9 == _index,
                   onTap: () {

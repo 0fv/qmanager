@@ -345,16 +345,6 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
       }
     });
     List<Widget> list = [
-      SwitchListTile(
-        title: Text("是否必填"),
-        value: comment.empty,
-        onChanged: (bool value) {
-          setState(() {
-            comment.empty = value;
-            this._questionCell.answerCells[0] = comment;
-          });
-        },
-      ),
       ListTile(
         leading: Text("行数："),
         title: input(context, "请输入行数", null, tec: line, fn: fn1),
@@ -433,16 +423,16 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
       }
     });
     List<Widget> list = [
-      SwitchListTile(
-        title: Text("是否必填"),
-        value: comment.empty,
-        onChanged: (bool value) {
-          setState(() {
-            comment.empty = value;
-            this._questionCell.answerCells[1] = comment;
-          });
-        },
-      ),
+      // SwitchListTile(
+      //   title: Text("文本可为空"),
+      //   value: comment.empty,
+      //   onChanged: (bool value) {
+      //     setState(() {
+      //       comment.empty = value;
+      //       this._questionCell.answerCells[1] = comment;
+      //     });
+      //   },
+      // ),
       ListTile(
         leading: Text("行数："),
         title: input(context, "请输入行数", null, tec: line, fn: fn1),

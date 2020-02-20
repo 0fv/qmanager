@@ -37,6 +37,7 @@ class _MyDataTableState extends State<MyDataTable> {
   List<dynamic> _allC = [];
   String _search;
   double _cellWidth;
+  bool _choose = false;
   final CELL_MIN_WIDTH = 80.0;
   final GlobalKey globalKey = GlobalKey();
 
@@ -164,6 +165,7 @@ class _MyDataTableState extends State<MyDataTable> {
       return Container();
     } else {
       var type = widget.obj.toMap()[this._search];
+      print(this._search);
       if (type is DateTime) {
         return Builder(
           builder: (context) {
@@ -180,7 +182,7 @@ class _MyDataTableState extends State<MyDataTable> {
             );
           },
         );
-      } else {
+      } else if (type is String) {
         return Builder(
           builder: (context) {
             return ConstrainedBox(
@@ -194,9 +196,40 @@ class _MyDataTableState extends State<MyDataTable> {
                     hintText: "搜索",
                     prefixIcon: Icon(Icons.search)),
                 onChanged: (v) {
-                  searchString(v);
+                  _searchString(v);
                 },
               ),
+            );
+          },
+        );
+      } else if (type is List) {
+        return Builder(
+          builder: (context) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 30, maxWidth: 200),
+              child: TextField(
+                maxLines: 1,
+                autofocus: false,
+                style: TextStyle(fontSize: 15),
+                decoration: InputDecoration(
+                    counterStyle: TextStyle(fontSize: 15),
+                    hintText: "搜索",
+                    prefixIcon: Icon(Icons.search)),
+                onChanged: (v) {
+                  _searchList(v);
+                },
+              ),
+            );
+          },
+        );
+      } else if (type is bool) {
+        return Builder(
+          builder: (context) {
+            return Switch(
+              value: this._choose,
+              onChanged: (v) {
+                _searchBool(v);
+              },
             );
           },
         );
@@ -204,17 +237,63 @@ class _MyDataTableState extends State<MyDataTable> {
     }
   }
 
-  searchString(String str) {
+  _searchBool(bool v) {
     List<dynamic> l = [];
-    RegExp k = new RegExp(r".*" + str + ".*");
     for (var e in this._allC) {
-      if (k.hasMatch(e[this._search])) {
+      int b = e[this._search];
+      if (v == (b == 0)) {
         l.add(e);
       }
     }
     setState(() {
+      this._choose = v;
       this._myTable = MyTable(l, _getCells);
     });
+  }
+
+  _searchList(String str) {
+    if (str.isEmpty) {
+      setState(() {
+        this._myTable = MyTable(this._allC, _getCells);
+      });
+    } else {
+      List<dynamic> l = [];
+      RegExp k = new RegExp(r".*" + str + ".*");
+      for (var e in this._allC) {
+        List list = e[this._search];
+        if (list != null && list.isNotEmpty) {
+          for (var i = 0; i < list.length; i++) {
+            if (k.hasMatch(list[i])) {
+              l.add(e);
+              break;
+            }
+          }
+        }
+      }
+      setState(() {
+        this._myTable = MyTable(l, _getCells);
+      });
+    }
+  }
+
+  _searchString(String str) {
+    if (str.isEmpty) {
+      setState(() {
+        this._myTable = MyTable(this._allC, _getCells);
+      });
+    } else {
+      List<dynamic> l = [];
+      RegExp k = new RegExp(r".*" + str + ".*");
+      for (var e in this._allC) {
+        print(e[this._search]);
+        if (e[this._search] != null && k.hasMatch(e[this._search])) {
+          l.add(e);
+        }
+      }
+      setState(() {
+        this._myTable = MyTable(l, _getCells);
+      });
+    }
   }
 
   searchDate() async {
@@ -276,7 +355,7 @@ class _MyDataTableState extends State<MyDataTable> {
       builder: (context) => SingleChildScrollView(
         child: PaginatedDataTable(
           availableRowsPerPage: [10, 15, 20],
-          actions: setAction(context),     
+          actions: setAction(context),
           rowsPerPage: this._defaultRowPageCount,
           onRowsPerPageChanged: (value) {
             setState(() {

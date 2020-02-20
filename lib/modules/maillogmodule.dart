@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:qmanager/modules/jsonserializable.dart';
+import 'package:qmanager/utils/boolutil.dart';
 
 part 'maillogmodule.g.dart';
 
@@ -11,7 +12,8 @@ class MailLog implements JsonS {
   String title;
   String name;
   String email;
-  String status;
+  @JsonKey(fromJson: BoolUtil.getBool)
+  bool status;
   String message;
   @JsonKey(name: "send_time")
   DateTime sendTime;

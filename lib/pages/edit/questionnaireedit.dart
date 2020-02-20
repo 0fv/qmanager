@@ -66,28 +66,30 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
       appBar: AppBar(
         title: Text("编辑问卷"),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
-              "标记为“已完成”",
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () async {
-              bool flag = await alertDialog("确认更改为已完成？更改后不能继续编辑", context);
-              if (flag) {
-                try {
-                  await _questionnaireApi
-                      .changeToFinish(this._questionnaire.id);
-                  popToast("修改成功", context);
-                  Future.delayed(Duration(milliseconds: 300)).then((onValue) {
-                    Navigator.of(context).pop();
-                  });
-                } on DioError catch (error) {
-                  var msg = error.message;
-                  popToast(msg, context);
+          Visibility(
+            visible: widget.arguments!=null,
+            child: FlatButton(
+              child: Text(
+                "标记为“已完成”",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                bool flag = await alertDialog("确认更改为已完成？更改后不能继续编辑", context);
+                if (flag) {
+                  try {
+                    await _questionnaireApi
+                        .changeToFinish(this._questionnaire.id);
+                    popToast("修改成功", context);
+                    Future.delayed(Duration(milliseconds: 300)).then((onValue) {
+                      Navigator.of(context).pop(true);
+                    });
+                  } on DioError catch (error) {
+                    var msg = error.message;
+                    popToast(msg, context);
+                  }
                 }
-                Navigator.pop(context, true);
-              }
-            },
+              },
+            ),
           ),
           FlatButton(
             child: Text(
@@ -111,7 +113,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                 try {
                   await _questionnaireApi.addData(this._questionnaire);
                   popToast("创建成功", context);
-                  Future.delayed(Duration(seconds: 2)).then((onValue) {
+                  Future.delayed(Duration(milliseconds: 400)).then((onValue) {
                     Navigator.pop(context, true);
                   });
                 } on DioError catch (error) {
@@ -122,7 +124,7 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
                 try {
                   await _questionnaireApi.updateData(this._questionnaire);
                   popToast("修改成功", context);
-                  Future.delayed(Duration(seconds: 2)).then((onValue) {
+                  Future.delayed(Duration(milliseconds: 400)).then((onValue) {
                     Navigator.pop(context, true);
                   });
                 } on DioError catch (error) {
@@ -217,14 +219,13 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
               child: Text("展开全部问题组"),
               onPressed: () {
                 setState(() {
-                  int l= this._questionnaire.questionGroups.length;
+                  int l = this._questionnaire.questionGroups.length;
                   for (var i = 0; i < l; i++) {
                     this.isOpen.add(i);
                   }
                 });
               },
             )
-            
           ],
         );
       },

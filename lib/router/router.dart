@@ -4,13 +4,15 @@ import 'package:qmanager/pages/edit/questiongroupedit.dart';
 import 'package:qmanager/pages/edit/questionnaireedit.dart';
 import 'package:qmanager/pages/homepage.dart';
 import 'package:qmanager/pages/view/questionnaireview.dart';
+import 'package:qmanager/pages/view/statisticsview.dart';
 
 final routes = {
   '/': (context, {arguments}) => HomePage(),
   '/questionnaireEdit': (context,{arguments}) => QuestionnaireEdit(arguments: arguments),
   '/questionGroupEdit': (context,{arguments}) => QuestionGroupEdit(arguments: arguments),
   '/memberGroupEdit': (context,{arguments})=>MemeberGroupEdit(argumemts: arguments),
-  '/questionnaireView': (context,{arguments})=>QuestionnaireView(agruments: arguments)
+  '/questionnaireView': (context,{arguments})=>QuestionnaireView(agruments: arguments),
+  '/resultStatistics': (context,{arguments}) => ResultStatisticsView(arguments: arguments)
 };
 
 Route renderPage(settings) {

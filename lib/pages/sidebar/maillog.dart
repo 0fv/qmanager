@@ -35,7 +35,7 @@ class MailLogPage extends StatelessWidget {
       return DataCellUtil.getDataCell(
         value,
         200,
-        setText: (value) => value == "success"
+        setText: (value) => value == 1
             ? Text(
                 "成功",
                 style: TextStyle(color: Colors.green),
@@ -63,7 +63,7 @@ class MailLogPage extends StatelessWidget {
           name: "",
           sendTime: DateTime.now(),
           email: "DateTime.now()",
-          status: "",
+          status: false,
           questionnaireEntityId: "",
           message: ""),
       "邮件发送日志",

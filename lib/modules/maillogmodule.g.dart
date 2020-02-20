@@ -12,7 +12,7 @@ MailLog _$MailLogFromJson(Map<String, dynamic> json) {
     title: json['title'] as String,
     name: json['name'] as String,
     email: json['email'] as String,
-    status: json['status'] as String,
+    status: BoolUtil.getBool(json['status'] as int),
     questionnaireEntityId: json['questionnaire_entity_id'] as String,
     sendTime: json['send_time'] == null
         ? null
