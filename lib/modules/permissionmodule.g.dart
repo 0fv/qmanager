@@ -8,14 +8,15 @@ part of 'permissionmodule.dart';
 
 Permission _$PermissionFromJson(Map<String, dynamic> json) {
   return Permission()
-    ..questionnaire = json['questionnaire'] as bool
-    ..questionCells = json['question_cells'] as bool
-    ..questionGroups = json['question_groups'] as bool
-    ..inquiryCrew = json['inquiry_crew'] as bool
-    ..inquiryConfig = json['inquiry_config'] as bool
-    ..resultShow = json['result_show'] as bool
-    ..tmeplateControl = json['template_control'] as bool
-    ..accountManagement = json['account_management'] as bool;
+    ..questionnaire = json['questionnaire'] as String
+    ..questionCells = json['question_cells'] as String
+    ..questionGroups = json['question_groups'] as String
+    ..inquiryCrew = json['inquiry_crew'] as String
+    ..inquiryConfig = json['inquiry_config'] as String
+    ..resultShow = json['result_show'] as String
+    ..templateControl = json['template_control'] as String
+    ..accountManagement = json['account_management'] as String
+    ..mailManagement = json['mail_management'] as String;
 }
 
 Map<String, dynamic> _$PermissionToJson(Permission instance) =>
@@ -26,6 +27,7 @@ Map<String, dynamic> _$PermissionToJson(Permission instance) =>
       'inquiry_crew': instance.inquiryCrew,
       'inquiry_config': instance.inquiryConfig,
       'result_show': instance.resultShow,
-      'template_control': instance.tmeplateControl,
+      'template_control': instance.templateControl,
       'account_management': instance.accountManagement,
+      'mail_management': instance.mailManagement,
     };

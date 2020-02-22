@@ -3,21 +3,23 @@ part 'permissionmodule.g.dart';
 
 @JsonSerializable()
 class Permission {
-  bool questionnaire=false;
+  String questionnaire='';
   @JsonKey(name: "question_cells")
-  bool questionCells=false;
+  String questionCells='';
   @JsonKey(name: "question_groups")
-  bool questionGroups=false;
+  String questionGroups='';
   @JsonKey(name: "inquiry_crew")
-  bool inquiryCrew=false;
+  String inquiryCrew='';
   @JsonKey(name: "inquiry_config")
-  bool inquiryConfig=false;
+  String inquiryConfig='';
   @JsonKey(name: "result_show")
-  bool resultShow=false;
+  String resultShow='';
   @JsonKey(name: "template_control")
-  bool tmeplateControl=false;
+  String templateControl='';
   @JsonKey(name: "account_management")
-  bool accountManagement=false;
+  String accountManagement='';
+  @JsonKey(name: "mail_management")
+	String mailManagement='';
   Permission();
   factory Permission.fromJson(Map<String,dynamic> json)=> _$PermissionFromJson(json);
   Map<String,dynamic> toJson()=>_$PermissionToJson(this);

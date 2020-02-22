@@ -11,16 +11,28 @@ import 'package:qmanager/widget/misc.dart';
 
 class ResultStatisticsView extends StatelessWidget {
   final arguments;
-  const ResultStatisticsView({Key key, this.arguments}) : super(key: key);
+  final ResultStatisticsApi _api = ResultStatisticsApi();
+
+  ResultStatisticsView({Key key, this.arguments}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("统计信息")), body: _buildContainer());
+        appBar: AppBar(
+          title: Text("统计信息"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("导出问卷数据",style:TextStyle(color: Colors.white),),
+              onPressed: () {
+                _api.export(arguments['id']);
+              },
+            )
+          ],
+        ),
+        body: _buildContainer());
   }
 
   Widget _buildContainer() {
-    final ResultStatisticsApi _api = ResultStatisticsApi();
     Future<dynamic> data = _api.getData(arguments['id']);
     return FutureBuilder(
       future: data,
@@ -73,8 +85,7 @@ class ResultStatisticsView extends StatelessWidget {
         itemBuilder: (context, index) => Container(
           child: groupList[index],
         ),
-        staggeredTileBuilder: (int index) =>
-            new StaggeredTile.fit(2),
+        staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
         mainAxisSpacing: 4.0,
         crossAxisSpacing: 4.0,
       ),

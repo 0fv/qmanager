@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:qmanager/modules/usermodule.dart';
 import 'package:qmanager/pages/sidebar/complete.dart';
 import 'package:qmanager/pages/sidebar/edit.dart';
 import 'package:qmanager/pages/sidebar/email.dart';
@@ -10,6 +12,9 @@ import 'package:qmanager/pages/sidebar/permission.dart';
 import 'package:qmanager/pages/sidebar/process.dart';
 import 'package:qmanager/pages/sidebar/question.dart';
 import 'package:qmanager/pages/sidebar/questiongroup.dart';
+import 'package:qmanager/provider/user.dart';
+import 'package:qmanager/utils/dateutil.dart';
+import 'package:qmanager/widget/diolog/alertdiolog.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -33,6 +38,42 @@ class _HomePageState extends State<HomePage> {
     MailSchedulePage(),
   ];
   int _index = 1;
+  List<Widget> _buildTitle() {
+    User user = Provider.of<UserInfo>(context).user;
+    if (user != null) {
+      int isSuper = user.isSuper;
+      String username = user.username;
+      DateTime lastLogin = user.lastLogin;
+      String date = "无";
+      if (lastLogin != null) {
+        date = DateUtil.format2(user.lastLogin);
+      }
+      return [
+        Container(
+          alignment: Alignment.center,
+          child: Text(
+            "${isSuper == 1 ? '管理员' : '用户'} $username 上次登陆：$date",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        FlatButton(
+          child: Text(
+            "退出登陆",
+            style: TextStyle(color: Colors.white),
+          ),
+          onPressed: () async {
+            bool flag = await alertDialog("确认退出登陆？", context);
+            if (flag == true) {
+              Provider.of<UserInfo>(context, listen: false).logout();
+              Navigator.pushReplacementNamed(context, "/login");
+            }
+          },
+        )
+      ];
+    } else {
+      return <Widget>[];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +85,21 @@ class _HomePageState extends State<HomePage> {
     }
     if (this._width < MIN_M) {
       return Scaffold(
-        appBar: AppBar(title: Text("问题问卷管理")),
+        appBar: AppBar(
+          title: Text("问题问卷管理"),
+          actions: _buildTitle(),
+        ),
         body: bodyLayoutB(context),
         drawer: getDrawer(context, true),
       );
     } else {
       return Scaffold(
-          appBar: AppBar(title: Text("问题问卷管理")), body: bodyLayoutA(context));
+          appBar: AppBar(
+            title: Text("问题问卷管理"),
+            actions: _buildTitle(),
+            automaticallyImplyLeading: false,
+          ),
+          body: bodyLayoutA(context));
     }
   }
 
@@ -181,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                     setIndex(8, pop);
                   },
                 ),
-                 ListTile(
+                ListTile(
                   leading: Icon(Icons.assignment),
                   title: Text("邮箱日志"),
                   selected: 9 == _index,

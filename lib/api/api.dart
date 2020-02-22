@@ -33,9 +33,12 @@ class Api {
   _setTokenInterceptor() {
     String token = storage.getItem("token");
     this._tokenInterceptor = InterceptorsWrapper(onRequest: (o) {
-      o.headers["token"] =
-          "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1ODA1MjIxNTAsInVzZXJuYW1lIjoiYWRtaW4ifQ.6sMHAfPvjMdfV7yuQ9X09V6UieQ3BqoeT17yY1XdJg0";
+      o.headers["token"] = token;
     });
+  }
+
+  deleteToken() {
+    this._dio.interceptors.remove(this._tokenInterceptor);
   }
 
   //更新token拦截器对象

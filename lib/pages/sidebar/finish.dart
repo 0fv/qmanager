@@ -39,6 +39,13 @@ class Finish extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           FlatButton(
+            child: Text("查看统计"),
+            onPressed: () => {
+              Navigator.pushNamed(context, '/resultStatistics',
+                  arguments: {'id': row['id']})
+            },
+          ),
+          FlatButton(
               child: Text("再次开启并延长时间"),
               onPressed: () async {
                 DateTime from = await showDatePicker(
@@ -92,13 +99,14 @@ class Finish extends StatelessWidget {
       return DataCellUtil.getDataCell(value, 200);
     }
   }
-    Map<String, dynamic> _getMap(var m) {
+
+  Map<String, dynamic> _getMap(var m) {
     return QuestionnaireEntity.fromJson(m).toMap();
   }
 
   @override
   Widget build(BuildContext context) {
-     return SizedBox.expand(
+    return SizedBox.expand(
         child: MyDataTable(
       _getListData,
       title,

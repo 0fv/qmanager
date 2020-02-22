@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
+import 'package:qmanager/api/api.dart';
 import 'package:qmanager/pages/edit/membergroupedit.dart';
 import 'package:qmanager/pages/edit/questiongroupedit.dart';
 import 'package:qmanager/pages/edit/questionnaireedit.dart';
 import 'package:qmanager/pages/homepage.dart';
+import 'package:qmanager/pages/login.dart';
 import 'package:qmanager/pages/view/questionnaireview.dart';
 import 'package:qmanager/pages/view/statisticsview.dart';
 
 final routes = {
   '/': (context, {arguments}) => HomePage(),
-  '/questionnaireEdit': (context,{arguments}) => QuestionnaireEdit(arguments: arguments),
-  '/questionGroupEdit': (context,{arguments}) => QuestionGroupEdit(arguments: arguments),
-  '/memberGroupEdit': (context,{arguments})=>MemeberGroupEdit(argumemts: arguments),
-  '/questionnaireView': (context,{arguments})=>QuestionnaireView(agruments: arguments),
-  '/resultStatistics': (context,{arguments}) => ResultStatisticsView(arguments: arguments)
+  '/questionnaireEdit': (context, {arguments}) =>
+      QuestionnaireEdit(arguments: arguments),
+  '/questionGroupEdit': (context, {arguments}) =>
+      QuestionGroupEdit(arguments: arguments),
+  '/memberGroupEdit': (context, {arguments}) =>
+      MemeberGroupEdit(argumemts: arguments),
+  '/questionnaireView': (context, {arguments}) =>
+      QuestionnaireView(agruments: arguments),
+  '/resultStatistics': (context, {arguments}) =>
+      ResultStatisticsView(arguments: arguments),
+  '/login': (context, {arguments}) => Login(arguments: arguments)
 };
 
 Route renderPage(settings) {
@@ -24,14 +33,13 @@ Route renderPage(settings) {
           builder: (context) => page(context, arguments: settings.arguments));
       return route;
     } else {
-      final Route route = MaterialPageRoute(
-          builder: (context) => page(context));
+      final Route route =
+          MaterialPageRoute(builder: (context) => page(context));
       return route;
     }
   } else {
-    final Route route = MaterialPageRoute(
-        builder: (context) =>
-            routes["/"](context));
+    final Route route =
+        MaterialPageRoute(builder: (context) => routes["/"](context));
     return route;
   }
 }
