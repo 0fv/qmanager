@@ -14,7 +14,6 @@ Future<QuestionCell> answerCellDialog(BuildContext context) {
         content: TypeChoicer(
           onChanged: (value) {
             _questionCell = value;
-            print(_questionCell.toJson());
           },
         ),
         actions: <Widget>[

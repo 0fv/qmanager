@@ -90,7 +90,6 @@ class _MyDataTableState extends State<MyDataTable> {
                 });
               } else {
                 this._allC = snapshot.data["data"];
-                print(this._allC);
               }
 
               this._myTable = MyTable(this._allC, _getCells);
@@ -165,7 +164,6 @@ class _MyDataTableState extends State<MyDataTable> {
       return Container();
     } else {
       var type = widget.obj.toMap()[this._search];
-      print(this._search);
       if (type is DateTime) {
         return Builder(
           builder: (context) {
@@ -285,7 +283,6 @@ class _MyDataTableState extends State<MyDataTable> {
       List<dynamic> l = [];
       RegExp k = new RegExp(r".*" + str + ".*");
       for (var e in this._allC) {
-        print(e[this._search]);
         if (e[this._search] != null && k.hasMatch(e[this._search])) {
           l.add(e);
         }
@@ -305,7 +302,6 @@ class _MyDataTableState extends State<MyDataTable> {
         firstDate: new DateTime(2019),
         lastDate: new DateTime(2022));
     if (picked?.length == 2) {
-      print(picked);
       DateTime from = picked[0];
       DateTime to = picked[1].add(Duration(hours: 24));
       List l = [];

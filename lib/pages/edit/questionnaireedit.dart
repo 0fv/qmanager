@@ -182,9 +182,9 @@ class _QuestionnaireEditState extends State<QuestionnaireEdit> {
               fn: this._ifn,
               length: 249,
             ),
-            Container(
-              child: Text("value:3${this._questionnaire.toJson()}"),
-            ),
+            // Container(
+            //   child: Text("value:3${this._questionnaire.toJson()}"),
+            // ),
             Text("编辑"),
             FlatButton(
               child: Text("添加空白问题组"),

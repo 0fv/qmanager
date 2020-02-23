@@ -146,9 +146,9 @@ class _QuestionGroupEditState extends State<QuestionGroupEdit> {
           ),
           input(context, "类型", null,
               tec: this._classification, fn: this._cfn, length: 10),
-          Container(
-            child: Text("value:3${_questionGroupCollection.toJson()}"),
-          ),
+          // Container(
+          //   child: Text("value:3${_questionGroupCollection.toJson()}"),
+          // ),
           ListTile(
             leading: Icon(Icons.add),
             title: Text("新建问题"),

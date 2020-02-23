@@ -144,7 +144,6 @@ class _QuestionCellFormState extends State<QuestionCellForm> {
               FlatButton(
                   child: Text("确定"),
                   onPressed: () {
-                    print(this._questionCell.toJson());
                     Navigator.of(context).pop(this._questionCell);
                   }),
             ],

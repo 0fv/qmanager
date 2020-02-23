@@ -36,7 +36,6 @@ class MemberGroupTable extends StatelessWidget {
                   Navigator.of(context).pop(selectedRow.map((mg) {
                     MemberGroup m =
                         MemberGroup(id: mg['id'], groupName: mg['group_name']);
-                    print(m.toJson());
                     return m;
                   }).toList());
                 }),

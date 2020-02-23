@@ -37,7 +37,6 @@ class Permission extends StatelessWidget {
               child: Text("修改权限"),
               onPressed: () async {
                 var user = await userApi.getUserById(row["id"]);
-                print(user);
                 User u = User.fromJson(user["data"]);
                 await updateUserPermission(context, u);
               }),
