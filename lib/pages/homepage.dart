@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qmanager/modules/usermodule.dart';
@@ -17,6 +18,8 @@ import 'package:qmanager/utils/dateutil.dart';
 import 'package:qmanager/widget/diolog/alertdiolog.dart';
 
 class HomePage extends StatefulWidget {
+  final arguments;
+  HomePage({this.arguments});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -37,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     MailLogPage(),
     MailSchedulePage(),
   ];
-  int _index = 1;
+  int _index = 0;
   List<Widget> _buildTitle() {
     User user = Provider.of<UserInfo>(context).user;
     if (user != null) {
@@ -77,6 +80,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserInfo>(context).user;
+    if(user==null){
+      return Container();
+    }
     final width = MediaQuery.of(context).size.width;
     if (this._width != width) {
       setState(() {

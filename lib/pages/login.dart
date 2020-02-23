@@ -30,7 +30,7 @@ class _LoginState extends State<Login> {
     if (user == null) {
       return _loginBuild(context);
     }else{
-      return HomePage();
+      return HomePage(arguments: true,);
     }
   }
 

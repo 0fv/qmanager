@@ -17,6 +17,7 @@ class UserInfo extends ChangeNotifier {
         _loginApi.tokenLogin(token).then((value) {
           this._user = User.fromJson(value['data']['user']);
           this._token = token;
+          _api.updateToken(token);
           notifyListeners();
         });
       }
